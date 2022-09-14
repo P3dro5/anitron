@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">anitron</string>
+    <string name="base_code">https://www.omdbapi.com/</string>
+</resources>
