@@ -23,7 +23,7 @@ interface RetrofitService {
       private fun createHttpClient() =
           OkHttpClient().newBuilder().addInterceptor { chain ->
               val newUrl =
-                  chain.request().url().newBuilder()
+                  chain.request().url.newBuilder()
                       .addQueryParameter("apikey", BuildConfig.API_KEY).build()
               chain.proceed(chain.request().newBuilder().url(newUrl).build())
           }.build()
