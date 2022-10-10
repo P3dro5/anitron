@@ -1,22 +1,17 @@
-package com.example.anitron
+package com.example.anitron.ui.activity
 
-import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.Toast
-import androidx.core.view.size
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.anitron.ui.modelfactory.HomeViewModelFactory
+import com.example.anitron.ui.adapter.MovieRecyclerAdapter
 import com.example.anitron.databinding.ActivityMainBinding
-import com.example.anitron.repository.HomeRepository
-import com.example.anitron.service.RetrofitService
-import com.example.anitron.service.RetrofitService.Companion.retrofitService
-import com.example.anitron.viewmodel.HomeViewModel
+import com.example.anitron.data.repository.HomeRepository
+import com.example.anitron.domain.service.RetrofitService
+import com.example.anitron.ui.viewmodel.HomeViewModel
 
 
 class MainActivity : AppCompatActivity() {

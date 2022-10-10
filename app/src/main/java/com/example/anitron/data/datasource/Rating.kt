@@ -1,4 +1,4 @@
-package com.example.anitron
+package com.example.anitron.data.datasource
 
 data class Rating (
     var source:String,

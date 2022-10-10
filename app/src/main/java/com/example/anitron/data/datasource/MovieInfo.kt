@@ -1,6 +1,5 @@
-package com.example.anitron
+package com.example.anitron.data.datasource
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 class MovieInfo (

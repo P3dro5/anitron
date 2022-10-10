@@ -1,9 +1,9 @@
-package com.example.anitron
+package com.example.anitron.ui.modelfactory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.anitron.repository.HomeRepository
-import com.example.anitron.viewmodel.HomeViewModel
+import com.example.anitron.data.repository.HomeRepository
+import com.example.anitron.ui.viewmodel.HomeViewModel
 
 
 class HomeViewModelFactory constructor(private val repository: HomeRepository) :
