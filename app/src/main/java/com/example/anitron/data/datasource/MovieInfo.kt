@@ -3,37 +3,37 @@ package com.example.anitron.data.datasource
 import com.google.gson.annotations.SerializedName
 
 class MovieInfo (
-    @SerializedName("title")
+    @SerializedName("Title")
     var title:String,
-    @SerializedName("year")
+    @SerializedName("Year")
     var year:String,
-    @SerializedName("rated")
+    @SerializedName("Rated")
     var rated:String,
-    @SerializedName("released")
+    @SerializedName("Released")
     var released:String,
-    @SerializedName("runtime")
+    @SerializedName("Runtime")
     var runtime:String,
-    @SerializedName("genre")
+    @SerializedName("Genre")
     var genre:String,
-    @SerializedName("director")
+    @SerializedName("Director")
     var director:String,
-    @SerializedName("writer")
+    @SerializedName("Writer")
     var writer:String,
-    @SerializedName("actors")
+    @SerializedName("Actors")
     var actors:String,
-    @SerializedName("plot")
+    @SerializedName("Plot")
     var plot:String,
-    @SerializedName("language")
+    @SerializedName("Language")
     var language:String,
-    @SerializedName("country")
+    @SerializedName("Country")
     var country:String,
-    @SerializedName("awards")
+    @SerializedName("Awards")
     var awards:String,
-    @SerializedName("poster")
+    @SerializedName("Poster")
     var poster:String,
-    @SerializedName("ratings")
+    @SerializedName("Ratings")
     var ratings:List<Rating>,
-    @SerializedName("metascore")
+    @SerializedName("Metascore")
     var metascore:String,
     @SerializedName("imdbRating")
     var imdbRating: String,
@@ -41,11 +41,11 @@ class MovieInfo (
     var imdbVotes: String,
     @SerializedName("imdbID")
     var imdbID: String,
-    @SerializedName("type")
+    @SerializedName("Type")
     var type: String,
-    @SerializedName("dvd")
+    @SerializedName("DVD")
     var dvd: String,
-    @SerializedName("boxOffice")
+    @SerializedName("BoxOffice")
     var boxOffice: String
 
     )
