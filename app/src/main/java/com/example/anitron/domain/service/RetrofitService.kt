@@ -12,8 +12,8 @@ import retrofit2.http.Query
 interface RetrofitService {
     val idCalled: Int
 
-    @GET("?s=before&r=json&page=1")
-    suspend fun getAllMovies(): Response<MovieList>
+    @GET("?r=json&page=1")
+    suspend fun getSearchingResultsMovies(@Query("s") searchText : String): Response<MovieList>
 
     @GET("?r=json")
     suspend fun getMovieOnClick(@Query("i") imdbId : String): Response<MovieInfo>

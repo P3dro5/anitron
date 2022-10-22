@@ -51,9 +51,7 @@ class MovieInfoActivity : AppCompatActivity() {
             ViewModelProvider(
                 this,
                 MovieInfoViewModelFactory(MovieInfoRepository(retrofitService))
-            ).get(
-                MovieInfoViewModel::class.java
-            )
+            )[MovieInfoViewModel::class.java]
         if (imdbId != null) {
             viewModel.getMovieOnClick(imdbId)
         }
