@@ -10,13 +10,21 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface RetrofitService {
-    val idCalled: Int
 
-    @GET("?r=json&page=1")
-    suspend fun getSearchingResultsMovies(@Query("s") searchText : String): Response<MovieList>
+    @GET("3/movie/popular?language=en-US")
+    suspend fun getPopularMovies(): Response<MovieList>
 
-    @GET("?r=json")
-    suspend fun getMovieOnClick(@Query("i") imdbId : String): Response<MovieInfo>
+    @GET("3/tv/popular?language=en-US")
+    suspend fun getPopularSeries(): Response<MovieList>
+
+    @GET("3/movie/upcoming?language=en-US")
+    suspend fun getUpcomingMovies(): Response<MovieList>
+
+    @GET("3/tv/on_the_air?language=en-US")
+    suspend fun getOnTheAir(): Response<MovieList>
+
+    @GET("3/movie/now_playing?language=en-US&page=1")
+    suspend fun getOnTheatresMovies(): Response<MovieList>
 
     companion object {
 
@@ -24,7 +32,7 @@ interface RetrofitService {
           OkHttpClient().newBuilder().addInterceptor { chain ->
               val newUrl =
                   chain.request().url.newBuilder()
-                      .addQueryParameter("apikey", BuildConfig.API_KEY).build()
+                      .addQueryParameter("api_key", BuildConfig.API_KEY).build()
               chain.proceed(chain.request().newBuilder().url(newUrl).build())
           }.build()
         private var retrofitService: RetrofitService? = null
@@ -34,7 +42,7 @@ interface RetrofitService {
             if(retrofitService == null) {
                 val retrofit = Retrofit.Builder()
                     .client(createHttpClient())
-                    .baseUrl("https://omdbapi.com/")
+                    .baseUrl("https://api.themoviedb.org/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                 retrofitService = retrofit.create(RetrofitService::class.java)
