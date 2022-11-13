@@ -3,49 +3,38 @@ package com.example.anitron.data.datasource
 import com.google.gson.annotations.SerializedName
 
 class MovieInfo (
-    @SerializedName("Title")
-    var title:String,
-    @SerializedName("Year")
-    var year:String,
-    @SerializedName("Rated")
-    var rated:String,
+    @SerializedName("belongs_to_collection")
+    var belongsToCollection:List<MovieCollection?>,
+    @SerializedName("budget")
+    var budget:String,
+    @SerializedName("genres")
+    var genres:List<Genre>,
     @SerializedName("Released")
     var released:String,
-    @SerializedName("Runtime")
+    @SerializedName("homepage")
+    var homepage:String,
+    @SerializedName("id")
+    var id:String,
+    @SerializedName("overview")
+    var overview:String,
+    @SerializedName("poster_path")
+    var posterPath:String,
+    @SerializedName("production_companies")
+    var productionCompanies:List<Company>,
+    @SerializedName("releaseDate")
+    var releaseDate:String,
+    @SerializedName("revenue")
+    var revenue:String,
+    @SerializedName("runtime")
     var runtime:String,
-    @SerializedName("Genre")
-    var genre:String,
-    @SerializedName("Director")
-    var director:String,
-    @SerializedName("Writer")
-    var writer:String,
-    @SerializedName("Actors")
-    var actors:String,
-    @SerializedName("Plot")
-    var plot:String,
-    @SerializedName("Language")
-    var language:String,
-    @SerializedName("Country")
-    var country:String,
-    @SerializedName("Awards")
-    var awards:String,
-    @SerializedName("Poster")
-    var poster:String,
-    @SerializedName("Ratings")
-    var ratings:List<Rating>,
-    @SerializedName("Metascore")
-    var metascore:String,
-    @SerializedName("imdbRating")
-    var imdbRating: String,
-    @SerializedName("imdbVotes")
-    var imdbVotes: String,
-    @SerializedName("imdbID")
-    var imdbID: String,
-    @SerializedName("Type")
-    var type: String,
-    @SerializedName("DVD")
-    var dvd: String,
-    @SerializedName("BoxOffice")
-    var boxOffice: String
-
+    @SerializedName("spoken_languages")
+    var spokenLanguages:List<Language>,
+    @SerializedName("status")
+    var status:String,
+    @SerializedName("tagline")
+    var tagline:String,
+    @SerializedName("title")
+    var title:String,
+    @SerializedName("vote_average")
+    var voteAverage: String,
     )
