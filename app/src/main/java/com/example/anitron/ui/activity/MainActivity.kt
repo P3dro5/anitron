@@ -1,7 +1,9 @@
 package com.example.anitron.ui.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -16,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -39,6 +42,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewModel: HomeViewModel
 
     private val retrofitService = RetrofitService.getInstance()
+
+    private var isMovie : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,11 +90,15 @@ class MainActivity : AppCompatActivity() {
                                     .height(170.dp),
                                 backgroundColor = Color.Transparent,
                                 content = {
+                                    val context = LocalContext.current
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-
-
+                                                isMovie= true
+                                                val intent = Intent(context, InfoActivity::class.java)
+                                                intent.putExtra("id", movieSelected.id)
+                                                intent.putExtra("isMovie", isMovie)
+                                                context.startActivity(intent)
                                             }
                                             .fillMaxWidth(), content = {
                                             Row(
@@ -137,8 +146,10 @@ class MainActivity : AppCompatActivity() {
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-
-
+                                                isMovie= false
+                                                val intent = Intent(this@MainActivity, InfoActivity::class.java)
+                                                intent.putExtra(seriesSelected.id,"id");
+                                                startActivity(intent)
                                             }
                                             .fillMaxWidth(), content = {
                                             Row(
@@ -176,7 +187,7 @@ class MainActivity : AppCompatActivity() {
                     )
 
                     LazyRow{
-                        itemsIndexed(movie.value.onTheatres) { _, moviesSelected ->
+                        itemsIndexed(movie.value.onTheatres) { _, movieSelected ->
                             Card(
                                 elevation = 4.dp,
                                 modifier = Modifier
@@ -187,8 +198,10 @@ class MainActivity : AppCompatActivity() {
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-
-
+                                                isMovie= true
+                                                val intent = Intent(this@MainActivity, InfoActivity::class.java)
+                                                intent.putExtra(movieSelected.id,"id");
+                                                startActivity(intent)
                                             }
                                             .fillMaxWidth(), content = {
                                             Row(
@@ -199,7 +212,7 @@ class MainActivity : AppCompatActivity() {
                                                             .fillMaxSize()
                                                             .size(200.dp),
                                                         alignment = Alignment.Center,
-                                                        model = "https://image.tmdb.org/t/p/w500" + moviesSelected.poster,
+                                                        model = "https://image.tmdb.org/t/p/w500" + movieSelected.poster,
                                                         contentDescription = stringResource(R.string.app_name)
                                                     )
                                                 }
@@ -226,7 +239,7 @@ class MainActivity : AppCompatActivity() {
                     )
 
                     LazyRow{
-                        itemsIndexed(movie.value.upcomingMoviesSelection) { _, moviesSelected ->
+                        itemsIndexed(movie.value.upcomingMoviesSelection) { _, movieSelected ->
                             Card(
                                 elevation = 4.dp,
                                 modifier = Modifier
@@ -237,8 +250,10 @@ class MainActivity : AppCompatActivity() {
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-
-
+                                                isMovie= true
+                                                val intent = Intent(this@MainActivity, InfoActivity::class.java)
+                                                intent.putExtra(movieSelected.id,"id");
+                                                startActivity(intent)
                                             }
                                             .fillMaxWidth(), content = {
                                             Row(
@@ -249,7 +264,7 @@ class MainActivity : AppCompatActivity() {
                                                             .fillMaxSize()
                                                             .size(200.dp),
                                                         alignment = Alignment.Center,
-                                                        model = "https://image.tmdb.org/t/p/w500" + moviesSelected.poster,
+                                                        model = "https://image.tmdb.org/t/p/w500" + movieSelected.poster,
                                                         contentDescription = stringResource(R.string.app_name)
                                                     )
                                                 }
@@ -287,7 +302,10 @@ class MainActivity : AppCompatActivity() {
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-
+                                                isMovie= false
+                                                val intent = Intent(this@MainActivity, InfoActivity::class.java)
+                                                intent.putExtra(seriesSelected.id,"id");
+                                                startActivity(intent)
 
                                             }
                                             .fillMaxWidth(), content = {
