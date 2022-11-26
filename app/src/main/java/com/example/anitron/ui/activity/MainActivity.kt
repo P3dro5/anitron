@@ -32,7 +32,7 @@ import com.example.anitron.data.repository.HomeRepository
 import com.example.anitron.domain.service.RetrofitService
 import com.example.anitron.ui.theme.fonts
 import com.example.anitron.ui.viewmodel.HomeViewModel
-import com.example.anitron.ui.viewmodel.State
+import com.example.anitron.data.datasource.State
 
 
 class MainActivity : AppCompatActivity() {

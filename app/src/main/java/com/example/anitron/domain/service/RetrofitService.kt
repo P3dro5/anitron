@@ -7,7 +7,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.Path
 
 interface RetrofitService {
 
@@ -26,8 +26,11 @@ interface RetrofitService {
     @GET("3/movie/now_playing?language=en-US&page=1")
     suspend fun getOnTheatresMovies(): Response<MovieList>
 
-    @GET("3/movie/?language=en-US")
-    suspend fun getMovieOnClick(@Query("i") imdbId : String): Response<MovieInfo>
+    @GET("3/movie/{i}?language=en-US")
+    suspend fun getMovieOnClick(@Path("i") imdbId : String): Response<MovieInfo>
+
+    @GET("3/tv/{i}?language=en-US")
+    suspend fun getTvShowOnClick(@Path("i") imdbId : String): Response<MovieInfo>
 
     companion object {
 

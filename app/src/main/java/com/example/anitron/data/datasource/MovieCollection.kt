@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName
 
 class MovieCollection(
     @SerializedName("id")
-    var id:String,
+    var id:String?,
     @SerializedName("name")
-    var name:String,
+    var name:String?,
     @SerializedName("poster_path")
-    var posterPath:String,
+    var posterPath:String?,
     @SerializedName("backdrop_path")
-    var backdropPath:String,
+    var backdropPath:String?,
 )
