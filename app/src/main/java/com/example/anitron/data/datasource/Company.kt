@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName
 class Company (
     @SerializedName("id")
     var id:String,
-    @SerializedName("poster_path")
+    @SerializedName("logo_path")
     var posterPath:String,
+    @SerializedName("name")
+    var name:String
 )

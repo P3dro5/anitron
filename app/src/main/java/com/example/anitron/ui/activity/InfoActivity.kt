@@ -3,11 +3,17 @@ package com.example.anitron.ui.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,7 +36,7 @@ import com.example.anitron.ui.modelfactory.InfoViewModelFactory
 import com.example.anitron.ui.theme.fonts
 import com.example.anitron.ui.viewmodel.InfoViewModel
 
-class InfoActivity : AppCompatActivity(){
+class InfoActivity : AppCompatActivity() {
 
     private lateinit var binding: MovieInfoBinding
 
@@ -47,32 +53,33 @@ class InfoActivity : AppCompatActivity(){
         val movieTvShowId = intent.getStringExtra("id")
         val isMovie = intent.getBooleanExtra("isMovie", false)
 
-        viewModel = ViewModelProvider(this, InfoViewModelFactory(MovieInfoRepository(retrofitService)))[InfoViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            InfoViewModelFactory(MovieInfoRepository(retrofitService))
+        )[InfoViewModel::class.java]
 
-        if(isMovie) {
+        if (isMovie) {
             if (movieTvShowId != null) {
                 viewModel.getMovieOnClick(movieTvShowId)
             }
-        }
-        else{
+        } else {
             if (movieTvShowId != null) {
                 viewModel.getShowOnClick(movieTvShowId)
             }
         }
         findViewById<ComposeView>(binding.infoViewDisplay.id)
             .setContent {
-                if(isMovie){
+                if (isMovie) {
                     if (movieTvShowId != null) {
                         viewModel.getMovieOnClick(movieTvShowId)
                     }
-                }
-                else{
+                } else {
                     if (movieTvShowId != null) {
                         viewModel.getShowOnClick(movieTvShowId)
                     }
                 }
                 val tvShowMovie = viewModel.movieTvShowInfo.collectAsState()
-                when(tvShowMovie.value.state){
+                when (tvShowMovie.value.state) {
                     State.Loading -> {}
                     State.Success ->
                         tvShowMovie.value.movieTvShow?.let { MovieTvShowInfoScreen(movieInfo = it) }
@@ -85,9 +92,8 @@ class InfoActivity : AppCompatActivity(){
         val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
-                .verticalScroll(state = scrollState)
-                .fillMaxHeight()
-                .fillMaxWidth(),
+                .verticalScroll(scrollState)
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -96,8 +102,7 @@ class InfoActivity : AppCompatActivity(){
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp)
-                    .width(IntrinsicSize.Max)
-
+                    .fillMaxSize()
             ) {
                 Column(
                     modifier = Modifier
@@ -110,7 +115,7 @@ class InfoActivity : AppCompatActivity(){
                 ) {
 
                     Image(
-                        painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/w500"+ movieInfo.posterPath),
+                        painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/w500" + movieInfo.posterPath),
                         contentDescription = null,
                         modifier = Modifier.size(328.dp)
                     )
@@ -134,7 +139,7 @@ class InfoActivity : AppCompatActivity(){
                                 modifier = Modifier.weight(1f)
                             )
                             Text(
-                                "Score:" + movieInfo.voteAverage + "/10",
+                                "Score:" + String.format("%.2f", movieInfo.voteAverage.toDouble()) + "/10",
                                 fontFamily = fonts,
                                 fontWeight = FontWeight.Normal,
                                 modifier = Modifier.weight(0.25f),
@@ -174,6 +179,7 @@ class InfoActivity : AppCompatActivity(){
                             .fillMaxHeight()
                             .fillMaxWidth()
                             .padding(10.dp),
+
                         verticalArrangement = Arrangement.spacedBy(30.dp)
                     ) {
                         Text(
@@ -184,72 +190,58 @@ class InfoActivity : AppCompatActivity(){
                             color = Color.White
                         )
                         Text(
-                            "Genre: " + movieInfo.genres,
+                            "Genres:",
                             fontFamily = fonts,
                             fontWeight = FontWeight.Normal,
                             fontSize = 15.sp,
                             color = Color.White
                         )
-                    }
-                    Column(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .fillMaxWidth()
-                            .padding(10.dp),
-                        verticalArrangement = Arrangement.spacedBy(15.dp)
-                    ) {
-                        Text(
-                            "Actors: " + movieInfo.released,
-                            fontFamily = fonts,
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 15.sp,
-                            color = Color.White
-                        )
-                        Text(
-                            "Director: " + movieInfo.released,
-                            fontFamily = fonts,
-                            fontWeight = FontWeight.Normal,
+                        Column (
+                            modifier= Modifier.animateContentSize()
+                        ){
+                            LazyRow(modifier = Modifier.fillMaxHeight(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                items(movieInfo.genres) { genre ->
+                                    Text(
+                                        genre.name,
+                                        fontFamily = fonts,
+                                        fontWeight = FontWeight.Normal,
+                                        fontSize = 15.sp,
+                                        color = Color.White,
+                                        modifier = Modifier.weight(weight = 1f)
+                                    )
 
-                            fontSize = 15.sp,
-                            color = Color.White
-                        )
-                        Text(
-                            "BoxOffice: " + movieInfo.released,
-                            fontFamily = fonts,
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 15.sp,
-                            color = Color.White
-                        )
+                                }
+                            }
+
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            verticalArrangement = Arrangement.spacedBy(15.dp)
+                        ) {
+                            Text(
+                                "Status: " + movieInfo.status,
+                                fontFamily = fonts,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 15.sp,
+                                color = Color.White
+                            )
+                            Text(
+                                "Revenue: " + movieInfo.revenue,
+                                fontFamily = fonts,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 15.sp,
+                                color = Color.White
+                            )
+                        }
                     }
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(20.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            "Language: " + movieInfo.released,
-                            fontFamily = fonts,
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 15.sp,
-                            color = Color.White,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Text(
-                            "Country: " + movieInfo.released,
-                            fontFamily = fonts,
-                            fontWeight = FontWeight.Normal,
-                            modifier = Modifier.weight(1f),
-                            fontSize = 15.sp,
-                            color = Color.White
-                        )
-                    }
                 }
+
             }
-
-
         }
-    }
 
+    }
 }

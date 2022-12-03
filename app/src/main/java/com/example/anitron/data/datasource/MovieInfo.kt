@@ -9,8 +9,6 @@ class MovieInfo (
     var budget:String,
     @SerializedName("genres")
     var genres:List<Genre>,
-    @SerializedName("Released")
-    var released:String,
     @SerializedName("homepage")
     var homepage:String,
     @SerializedName("id")
@@ -21,7 +19,7 @@ class MovieInfo (
     var posterPath:String,
     @SerializedName("production_companies")
     var productionCompanies:List<Company>,
-    @SerializedName("releaseDate")
+    @SerializedName("release_date")
     var releaseDate:String,
     @SerializedName("revenue")
     var revenue:String,
