@@ -4,5 +4,5 @@ import com.example.anitron.domain.service.RetrofitService
 
 class MovieInfoRepository(private val retrofitService: RetrofitService) {
     suspend fun getMovieSelected(movieId: String) = retrofitService.getMovieOnClick(movieId)
-    suspend fun getShowOnClick(movieId: String) = retrofitService.getTvShowOnClick(movieId)
+    suspend fun getShowSelected(tvShowId: String) = retrofitService.getTvShowOnClick(tvShowId)
 }

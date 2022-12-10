@@ -143,13 +143,15 @@ class MainActivity : AppCompatActivity() {
                                     .height(170.dp),
                                 backgroundColor = Color.Transparent,
                                 content = {
+                                    val context = LocalContext.current
                                     Row(
                                         modifier = Modifier
                                             .clickable {
                                                 isMovie= false
-                                                val intent = Intent(this@MainActivity, InfoActivity::class.java)
-                                                intent.putExtra(seriesSelected.id,"id");
-                                                startActivity(intent)
+                                                val intent = Intent(context, InfoActivity::class.java)
+                                                intent.putExtra("id", seriesSelected.id)
+                                                intent.putExtra("isMovie", isMovie)
+                                                context.startActivity(intent)
                                             }
                                             .fillMaxWidth(), content = {
                                             Row(
@@ -195,13 +197,15 @@ class MainActivity : AppCompatActivity() {
                                     .height(170.dp),
                                 backgroundColor = Color.Transparent,
                                 content = {
+                                    val context = LocalContext.current
                                     Row(
                                         modifier = Modifier
                                             .clickable {
                                                 isMovie= true
-                                                val intent = Intent(this@MainActivity, InfoActivity::class.java)
-                                                intent.putExtra(movieSelected.id,"id");
-                                                startActivity(intent)
+                                                val intent = Intent(context, InfoActivity::class.java)
+                                                intent.putExtra("id", movieSelected.id)
+                                                intent.putExtra("isMovie", isMovie)
+                                                context.startActivity(intent)
                                             }
                                             .fillMaxWidth(), content = {
                                             Row(
@@ -247,13 +251,15 @@ class MainActivity : AppCompatActivity() {
                                     .height(170.dp),
                                 backgroundColor = Color.Transparent,
                                 content = {
+                                    val context = LocalContext.current
                                     Row(
                                         modifier = Modifier
                                             .clickable {
                                                 isMovie= true
-                                                val intent = Intent(this@MainActivity, InfoActivity::class.java)
-                                                intent.putExtra(movieSelected.id,"id");
-                                                startActivity(intent)
+                                                val intent = Intent(context, InfoActivity::class.java)
+                                                intent.putExtra("id", movieSelected.id)
+                                                intent.putExtra("isMovie", isMovie)
+                                                context.startActivity(intent)
                                             }
                                             .fillMaxWidth(), content = {
                                             Row(
@@ -299,14 +305,15 @@ class MainActivity : AppCompatActivity() {
                                     .height(170.dp),
                                 backgroundColor = Color.Transparent,
                                 content = {
+                                    val context = LocalContext.current
                                     Row(
                                         modifier = Modifier
                                             .clickable {
                                                 isMovie= false
-                                                val intent = Intent(this@MainActivity, InfoActivity::class.java)
-                                                intent.putExtra(seriesSelected.id,"id");
-                                                startActivity(intent)
-
+                                                val intent = Intent(context, InfoActivity::class.java)
+                                                intent.putExtra("id", seriesSelected.id)
+                                                intent.putExtra("isMovie", isMovie)
+                                                context.startActivity(intent)
                                             }
                                             .fillMaxWidth(), content = {
                                             Row(

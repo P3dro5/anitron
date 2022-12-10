@@ -1,10 +1,11 @@
-package com.example.anitron.data.datasource
+package com.example.anitron.data.datasource.movieInfo
 
+import com.example.anitron.data.datasource.MovieCollection
 import com.google.gson.annotations.SerializedName
 
 class MovieInfo (
     @SerializedName("belongs_to_collection")
-    var belongsToCollection:List<MovieCollection?>,
+    var belongsToCollection: MovieCollection?,
     @SerializedName("budget")
     var budget:String,
     @SerializedName("genres")

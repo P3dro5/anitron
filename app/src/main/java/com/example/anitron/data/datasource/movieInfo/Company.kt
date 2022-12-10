@@ -1,12 +1,12 @@
-package com.example.anitron.data.datasource
+package com.example.anitron.data.datasource.movieInfo
 
 import com.google.gson.annotations.SerializedName
 
 class Company (
     @SerializedName("id")
-    var id:String,
+    var id:String?,
     @SerializedName("logo_path")
-    var posterPath:String,
+    var posterPath:String?,
     @SerializedName("name")
-    var name:String
+    var name:String?
 )

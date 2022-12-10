@@ -1,7 +1,8 @@
 package com.example.anitron.domain.service
 import com.example.anitron.data.datasource.MovieList
 import com.example.anitron.BuildConfig
-import com.example.anitron.data.datasource.MovieInfo
+import com.example.anitron.data.datasource.movieInfo.MovieInfo
+import com.example.anitron.data.datasource.tvshowInfo.TvShowInfo
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -30,7 +31,7 @@ interface RetrofitService {
     suspend fun getMovieOnClick(@Path("i") imdbId : String): Response<MovieInfo>
 
     @GET("3/tv/{i}?language=en-US")
-    suspend fun getTvShowOnClick(@Path("i") imdbId : String): Response<MovieInfo>
+    suspend fun getTvShowOnClick(@Path("i") imdbId : String): Response<TvShowInfo>
 
     companion object {
 
