@@ -1,16 +1,15 @@
-package com.example.anitron.data.datasource
+package com.example.anitron.data.datasource.movieInfo
 
+import com.example.anitron.data.datasource.MovieCollection
 import com.google.gson.annotations.SerializedName
 
 class MovieInfo (
     @SerializedName("belongs_to_collection")
-    var belongsToCollection:List<MovieCollection?>,
+    var belongsToCollection: MovieCollection?,
     @SerializedName("budget")
     var budget:String,
     @SerializedName("genres")
     var genres:List<Genre>,
-    @SerializedName("Released")
-    var released:String,
     @SerializedName("homepage")
     var homepage:String,
     @SerializedName("id")
@@ -21,7 +20,7 @@ class MovieInfo (
     var posterPath:String,
     @SerializedName("production_companies")
     var productionCompanies:List<Company>,
-    @SerializedName("releaseDate")
+    @SerializedName("release_date")
     var releaseDate:String,
     @SerializedName("revenue")
     var revenue:String,

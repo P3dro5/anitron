@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.compose.runtime.State as NormalState
 import com.example.anitron.data.datasource.Movie
+import com.example.anitron.data.datasource.SearchWidgetState
+import com.example.anitron.data.datasource.State
 import com.example.anitron.data.repository.HomeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -103,16 +105,5 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
       }
     }*/
 }
-//data class Result(val state: State, val movieSelection: List<Movie>)
 
 data class Result(val state: State, val movieSelection: List<Movie>, val seriesSelection: List<Movie>, val upcomingMoviesSelection: List<Movie>, val upcomingSeriesSelection: List<Movie>, val onTheatres: List<Movie>)
-
-enum class State {
-        Success,
-        Failed,
-        Loading
-}
-enum class SearchWidgetState {
-        OPENED,
-        CLOSED
-}
