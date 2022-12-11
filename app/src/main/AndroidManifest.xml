@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.MovieInfoActivity"
+            android:name=".ui.activity.InfoActivity"
             android:exported="true">
         </activity>
 

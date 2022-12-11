@@ -8,18 +8,9 @@
     android:background="@color/dark_blue_grey"
     tools:context=".ui.activity.MainActivity">
 
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/movie" />
-
-
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/homeViewDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
