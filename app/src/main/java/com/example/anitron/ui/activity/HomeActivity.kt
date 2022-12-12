@@ -3,7 +3,7 @@ package com.example.anitron.ui.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -11,7 +11,10 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +38,7 @@ import com.example.anitron.ui.viewmodel.HomeViewModel
 import com.example.anitron.data.datasource.State
 
 
-class MainActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -53,9 +56,7 @@ class MainActivity : AppCompatActivity() {
 
         //get viewmodel instance using MyViewModelFactory
         viewModel =
-            ViewModelProvider(this, HomeViewModelFactory(HomeRepository(retrofitService))).get(
-                HomeViewModel::class.java
-            )
+            ViewModelProvider(this, HomeViewModelFactory(HomeRepository(retrofitService)))[HomeViewModel::class.java]
 
         findViewById<ComposeView>(binding.homeViewDisplay.id)
             .setContent {
@@ -71,13 +72,25 @@ class MainActivity : AppCompatActivity() {
                         .fillMaxSize()
                         .padding(15.dp),
                 ) {
-                    Text(
-                        "Popular Movies",
-                        fontFamily = fonts,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 20.sp,
-                        color = Color.White
-                    )
+                    val context = LocalContext.current
+                    Row(
+                        modifier = Modifier.fillMaxHeight(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            "Popular Movies",
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Icon(modifier = Modifier.clickable {
+                            val intent = Intent(context, ViewMoreActivity::class.java)
+                            context.startActivity(intent)
+                        }.weight(0.1f), imageVector = Icons.Default.ArrowForward, contentDescription = "Forward", tint = Color.White)
+                    }
+
                     Spacer(
                         modifier = Modifier.padding(10.dp)
                     )
@@ -94,8 +107,9 @@ class MainActivity : AppCompatActivity() {
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-                                                isMovie= true
-                                                val intent = Intent(context, InfoActivity::class.java)
+                                                isMovie = true
+                                                val intent =
+                                                    Intent(context, InfoActivity::class.java)
                                                 intent.putExtra("id", movieSelected.id)
                                                 intent.putExtra("isMovie", isMovie)
                                                 context.startActivity(intent)
@@ -123,13 +137,23 @@ class MainActivity : AppCompatActivity() {
                     Spacer(
                         modifier = Modifier.padding(15.dp)
                     )
-                    Text(
-                        "Popular TV Shows",
-                        fontFamily = fonts,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 20.sp,
-                        color = Color.White
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxHeight(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            "Popular Tv Shows",
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Icon(modifier = Modifier.clickable {
+                            val intent = Intent(context, ViewMoreActivity::class.java)
+                            context.startActivity(intent)
+                        }.weight(0.1f), imageVector = Icons.Default.ArrowForward, contentDescription = "Forward", tint = Color.White)
+                    }
                     Spacer(
                         modifier = Modifier.padding(10.dp)
                     )
@@ -147,8 +171,9 @@ class MainActivity : AppCompatActivity() {
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-                                                isMovie= false
-                                                val intent = Intent(context, InfoActivity::class.java)
+                                                isMovie = false
+                                                val intent =
+                                                    Intent(context, InfoActivity::class.java)
                                                 intent.putExtra("id", seriesSelected.id)
                                                 intent.putExtra("isMovie", isMovie)
                                                 context.startActivity(intent)
@@ -177,13 +202,23 @@ class MainActivity : AppCompatActivity() {
                     Spacer(
                         modifier = Modifier.padding(15.dp)
                     )
-                    Text(
-                        "On Theatres",
-                        fontFamily = fonts,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 20.sp,
-                        color = Color.White
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxHeight(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            "On Theatres",
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Icon(modifier = Modifier.clickable {
+                            val intent = Intent(context, ViewMoreActivity::class.java)
+                            context.startActivity(intent)
+                        }.weight(0.1f), imageVector = Icons.Default.ArrowForward, contentDescription = "Forward", tint = Color.White)
+                    }
                     Spacer(
                         modifier = Modifier.padding(10.dp)
                     )
@@ -201,8 +236,9 @@ class MainActivity : AppCompatActivity() {
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-                                                isMovie= true
-                                                val intent = Intent(context, InfoActivity::class.java)
+                                                isMovie = true
+                                                val intent =
+                                                    Intent(context, InfoActivity::class.java)
                                                 intent.putExtra("id", movieSelected.id)
                                                 intent.putExtra("isMovie", isMovie)
                                                 context.startActivity(intent)
@@ -231,13 +267,23 @@ class MainActivity : AppCompatActivity() {
                     Spacer(
                         modifier = Modifier.padding(15.dp)
                     )
-                    Text(
-                        "Upcoming Movies",
-                        fontFamily = fonts,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 20.sp,
-                        color = Color.White
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxHeight(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            "Upcoming Movies",
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Icon(modifier = Modifier.clickable {
+                            val intent = Intent(context, ViewMoreActivity::class.java)
+                            context.startActivity(intent)
+                        }.weight(0.1f), imageVector = Icons.Default.ArrowForward, contentDescription = "Forward", tint = Color.White)
+                    }
                     Spacer(
                         modifier = Modifier.padding(10.dp)
                     )
@@ -255,8 +301,9 @@ class MainActivity : AppCompatActivity() {
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-                                                isMovie= true
-                                                val intent = Intent(context, InfoActivity::class.java)
+                                                isMovie = true
+                                                val intent =
+                                                    Intent(context, InfoActivity::class.java)
                                                 intent.putExtra("id", movieSelected.id)
                                                 intent.putExtra("isMovie", isMovie)
                                                 context.startActivity(intent)
@@ -285,13 +332,23 @@ class MainActivity : AppCompatActivity() {
                     Spacer(
                         modifier = Modifier.padding(15.dp)
                     )
-                    Text(
-                        "Shows Currently Airing",
-                        fontFamily = fonts,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 20.sp,
-                        color = Color.White
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxHeight(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            "Shows Currently Airing",
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Icon(modifier = Modifier.clickable {
+                            val intent = Intent(context, ViewMoreActivity::class.java)
+                            context.startActivity(intent)
+                        }.weight(0.1f), imageVector = Icons.Default.ArrowForward, contentDescription = "Forward", tint = Color.White)
+                    }
                     Spacer(
                         modifier = Modifier.padding(10.dp)
                     )
@@ -309,8 +366,9 @@ class MainActivity : AppCompatActivity() {
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-                                                isMovie= false
-                                                val intent = Intent(context, InfoActivity::class.java)
+                                                isMovie = false
+                                                val intent =
+                                                    Intent(context, InfoActivity::class.java)
                                                 intent.putExtra("id", seriesSelected.id)
                                                 intent.putExtra("isMovie", isMovie)
                                                 context.startActivity(intent)
