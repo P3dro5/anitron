@@ -49,11 +49,11 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
     fun getHomeScreenMoviesAndSeries() {
         viewModelScope.launch{
             try{
-                var popularMoviesResponses = repository.getPopMovies()
-                var popularSeriesResponses = repository.getPopSeries()
-                var upcomingMoviesResponses = repository.getUpcMovies()
-                var upcomingSeriesResponses = repository.getOnAir()
-                var onTheatres = repository.getOnTheatres()
+                var popularMoviesResponses = repository.getPopMovies("1")
+                var popularSeriesResponses = repository.getPopSeries("1")
+                var upcomingMoviesResponses = repository.getUpcMovies("1")
+                var upcomingSeriesResponses = repository.getOnAir("1")
+                var onTheatres = repository.getOnTheatres("1")
 
 
                 if(popularMoviesResponses.isSuccessful && popularMoviesResponses.body() != null && popularSeriesResponses.isSuccessful && popularSeriesResponses.body() != null){
@@ -67,7 +67,6 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
                                 onTheatres = onTheatres.body()!!.mList
                             )
                         )
-
                 }
                 else{
                     _movieList.emit(Result(state = State.Failed, movieSelection = listOf(), seriesSelection = listOf(), upcomingMoviesSelection = listOf(), upcomingSeriesSelection = listOf(), onTheatres = listOf() ))
