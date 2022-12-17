@@ -8,11 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Card
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,9 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import coil.compose.AsyncImage
 import com.example.anitron.R
+import com.example.anitron.data.datasource.CategoryEntry
 import com.example.anitron.data.datasource.State
 import com.example.anitron.data.repository.HomeRepository
-import com.example.anitron.data.repository.ViewMoreRepository
 import com.example.anitron.databinding.ViewMoreBinding
 import com.example.anitron.domain.service.RetrofitService
 import com.example.anitron.ui.modelfactory.ViewMoreViewModelFactory
@@ -45,8 +42,8 @@ class ViewMoreActivity : AppCompatActivity() {
 
         binding = ViewMoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        var isMovie = true
+        val category = intent.getSerializableExtra("category")
+        val isMovie = intent.getBooleanExtra("isMovie", false)
 
         viewModel = ViewModelProvider(
             this,
@@ -55,8 +52,24 @@ class ViewMoreActivity : AppCompatActivity() {
 
         findViewById<ComposeView>(binding.viewMoreScreenDisplay.id)
             .setContent {
-                viewModel.getPopularMovieList()
-                val movie = viewModel.movies.collectAsState()
+                val movie = viewModel.entries.collectAsState()
+                when(category){
+                    CategoryEntry.PopularMovies -> {
+                        viewModel.getPopularMovieList()
+                    }
+                    CategoryEntry.PopularTvShows -> {
+                        viewModel.getPopularTvShowList()
+                    }
+                    CategoryEntry.OnTheatres -> {
+                        viewModel.getOnTheatresList()
+                    }
+                    CategoryEntry.UpcomingMovies -> {
+                        viewModel.getUpcomingMoviesList()
+                    }
+                    CategoryEntry.ShowsCurrentlyAiring -> {
+                        viewModel.getShowsCurrentlyAiringList()
+                    }
+                }
 
                 when (movie.value.state) {
                     State.Loading -> {}
@@ -67,7 +80,6 @@ class ViewMoreActivity : AppCompatActivity() {
                                 Row(
                                     modifier = Modifier
                                         .clickable {
-                                            isMovie = true
                                             val intent =
                                                 Intent(context, InfoActivity::class.java)
                                             intent.putExtra("id", movie.value.movies[index].id)

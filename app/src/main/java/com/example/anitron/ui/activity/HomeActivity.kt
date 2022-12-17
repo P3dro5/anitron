@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import coil.compose.AsyncImage
 import com.example.anitron.R
+import com.example.anitron.data.datasource.CategoryEntry
 import com.example.anitron.ui.modelfactory.HomeViewModelFactory
 import com.example.anitron.databinding.ActivityMainBinding
 import com.example.anitron.data.repository.HomeRepository
@@ -45,8 +46,6 @@ class HomeActivity : AppCompatActivity() {
     lateinit var viewModel: HomeViewModel
 
     private val retrofitService = RetrofitService.getInstance()
-
-    private var isMovie : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +86,8 @@ class HomeActivity : AppCompatActivity() {
                         )
                         Icon(modifier = Modifier.clickable {
                             val intent = Intent(context, ViewMoreActivity::class.java)
+                            intent.putExtra("category", CategoryEntry.PopularMovies)
+                            intent.putExtra("isMovie", true)
                             context.startActivity(intent)
                         }.weight(0.1f), imageVector = Icons.Default.ArrowForward, contentDescription = "Forward", tint = Color.White)
                     }
@@ -107,11 +108,10 @@ class HomeActivity : AppCompatActivity() {
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-                                                isMovie = true
                                                 val intent =
                                                     Intent(context, InfoActivity::class.java)
                                                 intent.putExtra("id", movieSelected.id)
-                                                intent.putExtra("isMovie", isMovie)
+                                                intent.putExtra("isMovie", true)
                                                 context.startActivity(intent)
                                             }
                                             .fillMaxWidth(), content = {
@@ -151,6 +151,8 @@ class HomeActivity : AppCompatActivity() {
                         )
                         Icon(modifier = Modifier.clickable {
                             val intent = Intent(context, ViewMoreActivity::class.java)
+                            intent.putExtra("category", CategoryEntry.PopularTvShows)
+                            intent.putExtra("isMovie", false)
                             context.startActivity(intent)
                         }.weight(0.1f), imageVector = Icons.Default.ArrowForward, contentDescription = "Forward", tint = Color.White)
                     }
@@ -171,11 +173,10 @@ class HomeActivity : AppCompatActivity() {
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-                                                isMovie = false
                                                 val intent =
                                                     Intent(context, InfoActivity::class.java)
                                                 intent.putExtra("id", seriesSelected.id)
-                                                intent.putExtra("isMovie", isMovie)
+                                                intent.putExtra("isMovie", false)
                                                 context.startActivity(intent)
                                             }
                                             .fillMaxWidth(), content = {
@@ -216,6 +217,8 @@ class HomeActivity : AppCompatActivity() {
                         )
                         Icon(modifier = Modifier.clickable {
                             val intent = Intent(context, ViewMoreActivity::class.java)
+                            intent.putExtra("category", CategoryEntry.OnTheatres)
+                            intent.putExtra("isMovie", true)
                             context.startActivity(intent)
                         }.weight(0.1f), imageVector = Icons.Default.ArrowForward, contentDescription = "Forward", tint = Color.White)
                     }
@@ -236,11 +239,10 @@ class HomeActivity : AppCompatActivity() {
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-                                                isMovie = true
                                                 val intent =
                                                     Intent(context, InfoActivity::class.java)
                                                 intent.putExtra("id", movieSelected.id)
-                                                intent.putExtra("isMovie", isMovie)
+                                                intent.putExtra("isMovie", true)
                                                 context.startActivity(intent)
                                             }
                                             .fillMaxWidth(), content = {
@@ -281,6 +283,8 @@ class HomeActivity : AppCompatActivity() {
                         )
                         Icon(modifier = Modifier.clickable {
                             val intent = Intent(context, ViewMoreActivity::class.java)
+                            intent.putExtra("category", CategoryEntry.UpcomingMovies)
+                            intent.putExtra("isMovie", true)
                             context.startActivity(intent)
                         }.weight(0.1f), imageVector = Icons.Default.ArrowForward, contentDescription = "Forward", tint = Color.White)
                     }
@@ -301,11 +305,10 @@ class HomeActivity : AppCompatActivity() {
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-                                                isMovie = true
                                                 val intent =
                                                     Intent(context, InfoActivity::class.java)
                                                 intent.putExtra("id", movieSelected.id)
-                                                intent.putExtra("isMovie", isMovie)
+                                                intent.putExtra("isMovie", true)
                                                 context.startActivity(intent)
                                             }
                                             .fillMaxWidth(), content = {
@@ -346,6 +349,8 @@ class HomeActivity : AppCompatActivity() {
                         )
                         Icon(modifier = Modifier.clickable {
                             val intent = Intent(context, ViewMoreActivity::class.java)
+                            intent.putExtra("category", CategoryEntry.ShowsCurrentlyAiring)
+                            intent.putExtra("isMovie", false)
                             context.startActivity(intent)
                         }.weight(0.1f), imageVector = Icons.Default.ArrowForward, contentDescription = "Forward", tint = Color.White)
                     }
@@ -366,11 +371,10 @@ class HomeActivity : AppCompatActivity() {
                                     Row(
                                         modifier = Modifier
                                             .clickable {
-                                                isMovie = false
                                                 val intent =
                                                     Intent(context, InfoActivity::class.java)
                                                 intent.putExtra("id", seriesSelected.id)
-                                                intent.putExtra("isMovie", isMovie)
+                                                intent.putExtra("isMovie", false)
                                                 context.startActivity(intent)
                                             }
                                             .fillMaxWidth(), content = {
