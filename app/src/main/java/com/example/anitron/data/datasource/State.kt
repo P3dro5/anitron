@@ -9,3 +9,12 @@ enum class SearchWidgetState {
     OPENED,
     CLOSED
 }
+
+enum class CategoryEntry {
+    PopularMovies,
+    PopularTvShows,
+    OnTheatres,
+    UpcomingMovies,
+    ShowsCurrentlyAiring,
+    None
+}

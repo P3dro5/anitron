@@ -9,23 +9,24 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface RetrofitService {
 
     @GET("3/movie/popular?language=en-US")
-    suspend fun getPopularMovies(): Response<MovieList>
+    suspend fun getPopularMovies(@Query("page") page : String): Response<MovieList>
 
     @GET("3/tv/popular?language=en-US")
-    suspend fun getPopularSeries(): Response<MovieList>
+    suspend fun getPopularSeries(@Query("page") page : String): Response<MovieList>
 
     @GET("3/movie/upcoming?language=en-US")
-    suspend fun getUpcomingMovies(): Response<MovieList>
+    suspend fun getUpcomingMovies(@Query("page") page : String): Response<MovieList>
 
     @GET("3/tv/on_the_air?language=en-US")
-    suspend fun getOnTheAir(): Response<MovieList>
+    suspend fun getOnTheAir(@Query("page") page : String): Response<MovieList>
 
-    @GET("3/movie/now_playing?language=en-US&page=1")
-    suspend fun getOnTheatresMovies(): Response<MovieList>
+    @GET("3/movie/now_playing?language=en-US")
+    suspend fun getOnTheatresMovies(@Query("page") page : String): Response<MovieList>
 
     @GET("3/movie/{i}?language=en-US")
     suspend fun getMovieOnClick(@Path("i") imdbId : String): Response<MovieInfo>
