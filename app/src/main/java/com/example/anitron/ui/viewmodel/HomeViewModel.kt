@@ -18,10 +18,10 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
 
     private val _movieList = MutableStateFlow(Result(state = State.Loading, movieSelection = listOf(), seriesSelection = listOf(), upcomingMoviesSelection = listOf(), upcomingSeriesSelection = listOf(), onTheatres = listOf()))
     var movieList = _movieList
-    var cachedList = movieList.value
 
     private val _queryList = MutableStateFlow(ResultSearch(state = State.Loading, querySelection = listOf()))
     var queryList = _queryList
+    var cachedList = _queryList.value
 
     private val _searchWidgetState: MutableState<SearchWidgetState> =
         mutableStateOf(value = SearchWidgetState.CLOSED)
@@ -36,7 +36,7 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
     }
 
     fun searchMovies(value: List<Movie>){
-        //_movieList.value = Result(state = State.Loading, movieSelection = value)
+        _queryList.value = ResultSearch(state = State.Loading, querySelection = value)
     }
     fun updateSearchTextState(newValue: String) {
         _searchTextState.value = newValue
@@ -46,7 +46,7 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
     }
 
     fun closeSearchBar(){
-        movieList.update { cachedList }
+        queryList.update { cachedList }
     }
 
     fun getHomeScreenMoviesAndSeries() {
