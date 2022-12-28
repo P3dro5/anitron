@@ -34,6 +34,15 @@ interface RetrofitService {
     @GET("3/tv/{i}?language=en-US")
     suspend fun getTvShowOnClick(@Path("i") imdbId : String): Response<TvShowInfo>
 
+    @GET("3/tv/{i}/movie?language=en-US")
+    suspend fun getSearchMovies(@Query("query") searchQuery : String): Response<MovieList>
+
+    @GET("3/tv/{i}/tv?language=en-US")
+    suspend fun getSearchTvShows(@Query("query") searchQuery : String): Response<MovieList>
+
+    @GET("3/tv/{i}/person?language=en-US")
+    suspend fun getSearchPeople(@Query("query") searchQuery : String): Response<MovieList>
+
     companion object {
 
       private fun createHttpClient() =

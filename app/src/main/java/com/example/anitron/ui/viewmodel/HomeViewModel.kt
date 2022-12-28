@@ -20,6 +20,9 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
     var movieList = _movieList
     var cachedList = movieList.value
 
+    private val _queryList = MutableStateFlow(ResultSearch(state = State.Loading, querySelection = listOf()))
+    var queryList = _queryList
+
     private val _searchWidgetState: MutableState<SearchWidgetState> =
         mutableStateOf(value = SearchWidgetState.CLOSED)
     val searchWidgetState: NormalState<SearchWidgetState> = _searchWidgetState
@@ -78,31 +81,32 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
         }
     }
 
-    /*fun getSearchMovies(searchText: String) {
+    fun getSearchMovies(searchText: String) {
       viewModelScope.launch{
           try {
-          val response = repository.getAllMovies(searchText)
+          val response = repository.getSearchMovies(searchText)
           if(response.isSuccessful && response.body() != null){
               var response = response.body()
               if(response != null){
-                  _movieList.emit(
-                      Result(
+                  _queryList.emit(
+                      ResultSearch(
                           state = State.Success,
-                          movieSerieSelection = response.mList
+                          querySelection = response.mList
                       )
                   )
               }
-
           }
           else{
-              _movieList.emit(Result(state = State.Failed, movieSerieSelection = listOf()))
+              _queryList.emit(ResultSearch(state = State.Failed, querySelection = listOf()))
           }
         } catch (e: Exception) {
-            Log.e("ProductViewModel", e.message ?: "", e)
-            _movieList.emit(Result(state = State.Failed, movieSerieSelection = listOf()))
+            Log.e("HomeViewModel", e.message ?: "", e)
+            _queryList.emit(ResultSearch(state = State.Failed, querySelection = listOf()))
         }
       }
-    }*/
+    }
 }
 
 data class Result(val state: State, val movieSelection: List<Movie>, val seriesSelection: List<Movie>, val upcomingMoviesSelection: List<Movie>, val upcomingSeriesSelection: List<Movie>, val onTheatres: List<Movie>)
+
+data class ResultSearch(val state: State, val querySelection: List<Movie>)

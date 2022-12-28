@@ -99,9 +99,6 @@ class HomeActivity : AppCompatActivity() {
                         itemsIndexed(movie.value.movieSelection) { _, movieSelected ->
                             Card(
                                 elevation = 4.dp,
-                                modifier = Modifier
-                                    .width(130.dp)
-                                    .height(170.dp),
                                 backgroundColor = Color.Transparent,
                                 content = {
                                     val context = LocalContext.current
@@ -120,10 +117,9 @@ class HomeActivity : AppCompatActivity() {
                                                     AsyncImage(
                                                         contentScale = ContentScale.FillBounds,
                                                         modifier = Modifier
-                                                            .fillMaxSize()
-                                                            .size(200.dp),
+                                                            .fillMaxSize(),
                                                         alignment = Alignment.Center,
-                                                        model = "https://image.tmdb.org/t/p/w500" + movieSelected.poster,
+                                                        model = "https://image.tmdb.org/t/p/w300" + movieSelected.poster,
                                                         contentDescription = stringResource(R.string.app_name)
                                                     )
                                                 }
@@ -164,9 +160,6 @@ class HomeActivity : AppCompatActivity() {
                         itemsIndexed(movie.value.seriesSelection) { _, seriesSelected ->
                             Card(
                                 elevation = 4.dp,
-                                modifier = Modifier
-                                    .width(130.dp)
-                                    .height(170.dp),
                                 backgroundColor = Color.Transparent,
                                 content = {
                                     val context = LocalContext.current
@@ -185,10 +178,9 @@ class HomeActivity : AppCompatActivity() {
                                                     AsyncImage(
                                                         contentScale = ContentScale.FillBounds,
                                                         modifier = Modifier
-                                                            .fillMaxSize()
-                                                            .size(200.dp),
+                                                            .fillMaxSize(),
                                                         alignment = Alignment.Center,
-                                                        model = "https://image.tmdb.org/t/p/w500" + seriesSelected.poster,
+                                                        model = "https://image.tmdb.org/t/p/w300" + seriesSelected.poster,
                                                         contentDescription = stringResource(R.string.app_name)
                                                     )
                                                 }
@@ -230,9 +222,6 @@ class HomeActivity : AppCompatActivity() {
                         itemsIndexed(movie.value.onTheatres) { _, movieSelected ->
                             Card(
                                 elevation = 4.dp,
-                                modifier = Modifier
-                                    .width(130.dp)
-                                    .height(170.dp),
                                 backgroundColor = Color.Transparent,
                                 content = {
                                     val context = LocalContext.current
@@ -251,10 +240,9 @@ class HomeActivity : AppCompatActivity() {
                                                     AsyncImage(
                                                         contentScale = ContentScale.FillBounds,
                                                         modifier = Modifier
-                                                            .fillMaxSize()
-                                                            .size(200.dp),
+                                                            .fillMaxSize(),
                                                         alignment = Alignment.Center,
-                                                        model = "https://image.tmdb.org/t/p/w500" + movieSelected.poster,
+                                                        model = "https://image.tmdb.org/t/p/w300" + movieSelected.poster,
                                                         contentDescription = stringResource(R.string.app_name)
                                                     )
                                                 }
@@ -296,9 +284,6 @@ class HomeActivity : AppCompatActivity() {
                         itemsIndexed(movie.value.upcomingMoviesSelection) { _, movieSelected ->
                             Card(
                                 elevation = 4.dp,
-                                modifier = Modifier
-                                    .width(130.dp)
-                                    .height(170.dp),
                                 backgroundColor = Color.Transparent,
                                 content = {
                                     val context = LocalContext.current
@@ -317,10 +302,9 @@ class HomeActivity : AppCompatActivity() {
                                                     AsyncImage(
                                                         contentScale = ContentScale.FillBounds,
                                                         modifier = Modifier
-                                                            .fillMaxSize()
-                                                            .size(200.dp),
+                                                            .fillMaxSize(),
                                                         alignment = Alignment.Center,
-                                                        model = "https://image.tmdb.org/t/p/w500" + movieSelected.poster,
+                                                        model = "https://image.tmdb.org/t/p/w300" + movieSelected.poster,
                                                         contentDescription = stringResource(R.string.app_name)
                                                     )
                                                 }
@@ -362,9 +346,6 @@ class HomeActivity : AppCompatActivity() {
                         itemsIndexed(movie.value.upcomingSeriesSelection) { _, seriesSelected ->
                             Card(
                                 elevation = 4.dp,
-                                modifier = Modifier
-                                    .width(130.dp)
-                                    .height(170.dp),
                                 backgroundColor = Color.Transparent,
                                 content = {
                                     val context = LocalContext.current
@@ -383,10 +364,9 @@ class HomeActivity : AppCompatActivity() {
                                                     AsyncImage(
                                                         contentScale = ContentScale.FillBounds,
                                                         modifier = Modifier
-                                                            .fillMaxSize()
-                                                            .size(200.dp),
+                                                            .fillMaxSize(),
                                                         alignment = Alignment.Center,
-                                                        model = "https://image.tmdb.org/t/p/w500" + seriesSelected.poster,
+                                                        model = "https://image.tmdb.org/t/p/w300" + seriesSelected.poster,
                                                         contentDescription = stringResource(R.string.app_name)
                                                     )
                                                 }
