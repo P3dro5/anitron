@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -105,7 +107,56 @@ class HomeActivity : AppCompatActivity() {
                         when (movie.value.state) {
                             State.Loading -> {}
                             State.Searched -> {
-                                val i = 0
+                                val context = LocalContext.current
+
+                                Row(
+                                    modifier = Modifier.fillMaxHeight(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        "Movies",
+                                        fontFamily = fonts,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        fontSize = 20.sp,
+                                        color = Color.White,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    Icon(modifier = Modifier
+                                        .clickable {
+                                            val intent =
+                                                Intent(
+                                                    context,
+                                                    ViewMoreActivity::class.java
+                                                )
+                                            intent.putExtra(
+                                                "category",
+                                                CategoryEntry.PopularMovies
+                                            )
+                                            intent.putExtra("isMovie", true)
+                                            context.startActivity(intent)
+                                        }
+                                        .weight(0.1f),
+                                        imageVector = Icons.Default.ArrowForward,
+                                        contentDescription = "Forward",
+                                        tint = Color.White)
+                                }
+                                LazyVerticalGrid(columns = GridCells.Fixed(3), content = {
+                                        items(movie.value.movieSelection.size) { index ->
+                                            Row(
+                                                content = {
+                                                    AsyncImage(
+                                                        contentScale = ContentScale.FillBounds,
+                                                        modifier = Modifier
+                                                            .fillMaxSize(),
+                                                        alignment = Alignment.Center,
+                                                        model = "https://image.tmdb.org/t/p/w300" + movie.value.movieSelection[index].poster,
+                                                        contentDescription = null
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    })
+
                             }
                             State.Success ->
                                 Column(
