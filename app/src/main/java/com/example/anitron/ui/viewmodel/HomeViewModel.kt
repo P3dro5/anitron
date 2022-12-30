@@ -11,6 +11,7 @@ import com.example.anitron.data.datasource.SearchWidgetState
 import com.example.anitron.data.datasource.State
 import com.example.anitron.data.repository.HomeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -19,9 +20,7 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
     private val _movieList = MutableStateFlow(Result(state = State.Loading, movieSelection = listOf(), seriesSelection = listOf(), upcomingMoviesSelection = listOf(), upcomingSeriesSelection = listOf(), onTheatres = listOf()))
     var movieList = _movieList
 
-    private val _queryList = MutableStateFlow(ResultSearch(state = State.Loading, querySelection = listOf()))
-    var queryList = _queryList
-    var cachedList = _queryList.value
+    var cachedList = _movieList.value
 
     private val _searchWidgetState: MutableState<SearchWidgetState> =
         mutableStateOf(value = SearchWidgetState.CLOSED)
@@ -35,9 +34,9 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
         _searchWidgetState.value = newValue
     }
 
-    fun searchMovies(value: List<Movie>){
+    /*fun searchMovies(value: List<Movie>){
         _queryList.value = ResultSearch(state = State.Loading, querySelection = value)
-    }
+    }*/
     fun updateSearchTextState(newValue: String) {
         _searchTextState.value = newValue
     }
@@ -46,7 +45,7 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
     }
 
     fun closeSearchBar(){
-        queryList.update { cachedList }
+        movieList.update { cachedList }
     }
 
     fun getHomeScreenMoviesAndSeries() {
@@ -88,21 +87,42 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
           if(response.isSuccessful && response.body() != null){
               var response = response.body()
               if(response != null){
-                  _queryList.emit(
-                      ResultSearch(
-                          state = State.Success,
-                          querySelection = response.mList
+                  _movieList.getAndUpdate {
+                      Result(
+                          state = State.Searched,
+                          movieSelection = response.mList,
+                          seriesSelection = listOf(),
+                          upcomingMoviesSelection = listOf(),
+                          upcomingSeriesSelection = listOf(),
+                          onTheatres = listOf(),
                       )
-                  )
+                  }
               }
           }
           else{
-              _queryList.emit(ResultSearch(state = State.Failed, querySelection = listOf()))
+              _movieList.getAndUpdate {
+                  Result(
+                      state = State.Failed,
+                      movieSelection = listOf(),
+                      seriesSelection = listOf(),
+                      upcomingMoviesSelection = listOf(),
+                      upcomingSeriesSelection = listOf(),
+                      onTheatres = listOf(),
+                  )
+              }
           }
         } catch (e: Exception) {
             Log.e("HomeViewModel", e.message ?: "", e)
-            _queryList.emit(ResultSearch(state = State.Failed, querySelection = listOf()))
-        }
+              _movieList.getAndUpdate {
+                  Result(
+                      state = State.Failed,
+                      movieSelection = listOf(),
+                      seriesSelection = listOf(),
+                      upcomingMoviesSelection = listOf(),
+                      upcomingSeriesSelection = listOf(),
+                      onTheatres = listOf(),
+                  )
+              }        }
       }
     }
 }

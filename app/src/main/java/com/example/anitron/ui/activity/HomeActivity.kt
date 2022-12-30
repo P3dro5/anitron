@@ -53,10 +53,10 @@ class HomeActivity : AppCompatActivity() {
 
     private val retrofitService = RetrofitService.getInstance()
 
-    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        var initialCall = true
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -81,13 +81,13 @@ class HomeActivity : AppCompatActivity() {
 
                             onTextChange = {
                                 viewModel.updateSearchTextState(newValue = it)
+                                viewModel.getSearchMovies(searchText = it)
                             },
                             onCloseClicked = {
                                 viewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
                             },
                             onSearchClicked = {
                                 viewModel.getSearchMovies(searchText = it)
-
                             },
                         ) {
                             viewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
@@ -95,18 +95,24 @@ class HomeActivity : AppCompatActivity() {
                     },
                     modifier = Modifier.fillMaxSize(),
 
-                    content = {
-                        viewModel.getHomeScreenMoviesAndSeries()
+                    content = { padding ->
+                        if(initialCall) {
+                            viewModel.getHomeScreenMoviesAndSeries()
+                            initialCall = false
+                        }
                         val movie = viewModel.movieList.collectAsState()
 
                         when (movie.value.state) {
                             State.Loading -> {}
+                            State.Searched -> {
+                                val i = 0
+                            }
                             State.Success ->
                                 Column(
                                     modifier = Modifier
                                         .verticalScroll(rememberScrollState())
                                         .fillMaxSize()
-                                        .padding(15.dp),
+                                        .padding(padding),
                                 ) {
                                     val context = LocalContext.current
                                     Row(
@@ -516,7 +522,8 @@ class HomeActivity : AppCompatActivity() {
                                     }
                                 }
                         }
-                    })
+                    }
+                )
             }
     }
 
@@ -530,7 +537,7 @@ class HomeActivity : AppCompatActivity() {
 
             title = {
                 Text(
-                    text = "Bingemedia",
+                    text = "Binwatch",
                     color = Color.White
                 )
             },
@@ -658,12 +665,6 @@ class HomeActivity : AppCompatActivity() {
                     }
                 ),
             )
-            if (productViewModel.cachedList.querySelection.isEmpty() && search) {
-                CircularProgressIndicator(
-                    color = Color.Green,
-                    strokeWidth = 4.dp,
-                )
-            }
         }
     }
 }
