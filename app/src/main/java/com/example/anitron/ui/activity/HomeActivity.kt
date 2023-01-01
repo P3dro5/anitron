@@ -1,10 +1,8 @@
 package com.example.anitron.ui.activity
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -26,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -102,60 +99,148 @@ class HomeActivity : AppCompatActivity() {
                             viewModel.getHomeScreenMoviesAndSeries()
                             initialCall = false
                         }
-                        val movie = viewModel.movieList.collectAsState()
+                        val content = viewModel.movieList.collectAsState()
 
-                        when (movie.value.state) {
+                        when (content.value.state) {
                             State.Loading -> {}
                             State.Searched -> {
-                                val context = LocalContext.current
-
-                                Row(
-                                    modifier = Modifier.fillMaxHeight(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
+                                Column(
+                                    modifier = Modifier
+                                        .verticalScroll(rememberScrollState())
+                                        .fillMaxSize()
+                                        .padding(padding),
                                 ) {
-                                    Text(
-                                        "Movies",
-                                        fontFamily = fonts,
-                                        fontWeight = FontWeight.ExtraBold,
-                                        fontSize = 20.sp,
-                                        color = Color.White,
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    Icon(modifier = Modifier
-                                        .clickable {
-                                            val intent =
-                                                Intent(
-                                                    context,
-                                                    ViewMoreActivity::class.java
+                                    val context = LocalContext.current
+                                    if(content.value.seriesSelection.isNotEmpty()) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Spacer(
+                                            modifier = Modifier.padding(10.dp)
+                                        )
+                                        Text(
+                                            "Movies",
+                                            fontFamily = fonts,
+                                            fontWeight = FontWeight.ExtraBold,
+                                            fontSize = 20.sp,
+                                            color = Color.White,
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                        Icon(modifier = Modifier
+                                            .clickable {
+                                                val intent =
+                                                    Intent(
+                                                        context,
+                                                        ViewMoreActivity::class.java
+                                                    )
+                                                intent.putExtra(
+                                                    "category",
+                                                    CategoryEntry.PopularMovies
                                                 )
-                                            intent.putExtra(
-                                                "category",
-                                                CategoryEntry.PopularMovies
-                                            )
-                                            intent.putExtra("isMovie", true)
-                                            context.startActivity(intent)
-                                        }
-                                        .weight(0.1f),
-                                        imageVector = Icons.Default.ArrowForward,
-                                        contentDescription = "Forward",
-                                        tint = Color.White)
-                                }
-                                LazyVerticalGrid(columns = GridCells.Fixed(3), content = {
-                                        items(movie.value.movieSelection.size) { index ->
-                                            Row(
+                                                intent.putExtra("isMovie", true)
+                                                context.startActivity(intent)
+                                            }
+                                            .weight(0.1f),
+                                            imageVector = Icons.Default.ArrowForward,
+                                            contentDescription = "Forward",
+                                            tint = Color.White)
+                                    }
+                                    Spacer(
+                                        modifier = Modifier.padding(10.dp)
+                                    )
+                                    LazyVerticalGrid(modifier = Modifier.height(730.dp), columns = GridCells.Fixed(4), userScrollEnabled = false, content = {
+                                        items(content.value.movieSelection.size) { index ->
+                                            Card(
+                                                elevation = 4.dp,
+                                                backgroundColor = Color.Transparent,
                                                 content = {
-                                                    AsyncImage(
-                                                        contentScale = ContentScale.FillBounds,
-                                                        modifier = Modifier
-                                                            .fillMaxSize(),
-                                                        alignment = Alignment.Center,
-                                                        model = "https://image.tmdb.org/t/p/w300" + movie.value.movieSelection[index].poster,
-                                                        contentDescription = null
+                                                    Row(
+                                                        modifier = Modifier.fillMaxSize(),
+                                                        content = {
+                                                            AsyncImage(
+                                                                contentScale = ContentScale.FillBounds,
+                                                                modifier = Modifier
+                                                                    .fillMaxSize(),
+                                                                alignment = Alignment.Center,
+                                                                model = "https://image.tmdb.org/t/p/w300" + content.value.movieSelection[index].poster,
+                                                                contentDescription = null
+                                                            )
+                                                        }
                                                     )
                                                 }
                                             )
                                         }
                                     })
+                                    }
+                                    Spacer(
+                                        modifier = Modifier.padding(20.dp)
+                                    )
+                                    if(content.value.seriesSelection.isNotEmpty()) {
+                                        Row(
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Spacer(
+                                                modifier = Modifier.padding(10.dp)
+                                            )
+                                            Text(
+                                                "Tv Shows",
+                                                fontFamily = fonts,
+                                                fontWeight = FontWeight.ExtraBold,
+                                                fontSize = 20.sp,
+                                                color = Color.White,
+                                                modifier = Modifier.weight(1f)
+                                            )
+                                            Icon(modifier = Modifier
+                                                .clickable {
+                                                    val intent =
+                                                        Intent(
+                                                            context,
+                                                            ViewMoreActivity::class.java
+                                                        )
+                                                    intent.putExtra(
+                                                        "category",
+                                                        CategoryEntry.PopularMovies
+                                                    )
+                                                    intent.putExtra("isMovie", true)
+                                                    context.startActivity(intent)
+                                                }
+                                                .weight(0.1f),
+                                                imageVector = Icons.Default.ArrowForward,
+                                                contentDescription = "Forward",
+                                                tint = Color.White)
+                                        }
+                                        Spacer(
+                                            modifier = Modifier.padding(10.dp)
+                                        )
+                                        LazyVerticalGrid(
+                                            modifier = Modifier.height(730.dp),
+                                            columns = GridCells.Fixed(4),
+                                            userScrollEnabled = false,
+                                            content = {
+                                                items(content.value.seriesSelection.size) { index ->
+                                                    Card(
+                                                        elevation = 4.dp,
+                                                        backgroundColor = Color.Transparent,
+                                                        content = {
+                                                            Row(
+                                                                modifier = Modifier.fillMaxSize(),
+                                                                content = {
+                                                                    AsyncImage(
+                                                                        contentScale = ContentScale.FillBounds,
+                                                                        modifier = Modifier
+                                                                            .fillMaxSize(),
+                                                                        alignment = Alignment.Center,
+                                                                        model = "https://image.tmdb.org/t/p/w300" + content.value.seriesSelection[index].poster,
+                                                                        contentDescription = null
+                                                                    )
+                                                                }
+                                                            )
+                                                        }
+                                                    )
+                                                }
+                                            })
+                                    }
+                                }
 
                             }
                             State.Success ->
@@ -202,7 +287,7 @@ class HomeActivity : AppCompatActivity() {
                                         modifier = Modifier.padding(10.dp)
                                     )
                                     LazyRow {
-                                        itemsIndexed(movie.value.movieSelection) { _, movieSelected ->
+                                        itemsIndexed(content.value.movieSelection) { _, movieSelected ->
                                             Card(
                                                 elevation = 4.dp,
                                                 backgroundColor = Color.Transparent,
@@ -283,7 +368,7 @@ class HomeActivity : AppCompatActivity() {
                                     )
 
                                     LazyRow {
-                                        itemsIndexed(movie.value.seriesSelection) { _, seriesSelected ->
+                                        itemsIndexed(content.value.seriesSelection) { _, seriesSelected ->
                                             Card(
                                                 elevation = 4.dp,
                                                 backgroundColor = Color.Transparent,
@@ -365,7 +450,7 @@ class HomeActivity : AppCompatActivity() {
                                     )
 
                                     LazyRow {
-                                        itemsIndexed(movie.value.onTheatres) { _, movieSelected ->
+                                        itemsIndexed(content.value.onTheatres) { _, movieSelected ->
                                             Card(
                                                 elevation = 4.dp,
                                                 backgroundColor = Color.Transparent,
@@ -447,7 +532,7 @@ class HomeActivity : AppCompatActivity() {
                                     )
 
                                     LazyRow {
-                                        itemsIndexed(movie.value.upcomingMoviesSelection) { _, movieSelected ->
+                                        itemsIndexed(content.value.upcomingMoviesSelection) { _, movieSelected ->
                                             Card(
                                                 elevation = 4.dp,
                                                 backgroundColor = Color.Transparent,
@@ -529,7 +614,7 @@ class HomeActivity : AppCompatActivity() {
                                     )
 
                                     LazyRow {
-                                        itemsIndexed(movie.value.upcomingSeriesSelection) { _, seriesSelected ->
+                                        itemsIndexed(content.value.upcomingSeriesSelection) { _, seriesSelected ->
                                             Card(
                                                 elevation = 4.dp,
                                                 backgroundColor = Color.Transparent,

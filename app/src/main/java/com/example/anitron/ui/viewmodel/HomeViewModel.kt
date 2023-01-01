@@ -17,10 +17,10 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
 
-    private val _movieList = MutableStateFlow(Result(state = State.Loading, movieSelection = listOf(), seriesSelection = listOf(), upcomingMoviesSelection = listOf(), upcomingSeriesSelection = listOf(), onTheatres = listOf()))
-    var movieList = _movieList
+    private val _movieGlobalList = MutableStateFlow(Result(state = State.Loading, movieSelection = listOf(), seriesSelection = listOf(), upcomingMoviesSelection = listOf(), upcomingSeriesSelection = listOf(), onTheatres = listOf()))
+    var movieList = _movieGlobalList
 
-    var cachedList = _movieList.value
+    var cachedList = _movieGlobalList.value
 
     private val _searchWidgetState: MutableState<SearchWidgetState> =
         mutableStateOf(value = SearchWidgetState.CLOSED)
@@ -59,7 +59,7 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
 
 
                 if(popularMoviesResponses.isSuccessful && popularMoviesResponses.body() != null && popularSeriesResponses.isSuccessful && popularSeriesResponses.body() != null){
-                        _movieList.emit(
+                        _movieGlobalList.emit(
                             Result(
                                 state = State.Success,
                                 movieSelection = popularMoviesResponses.body()!!.mList,
@@ -71,11 +71,11 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
                         )
                 }
                 else{
-                    _movieList.emit(Result(state = State.Failed, movieSelection = listOf(), seriesSelection = listOf(), upcomingMoviesSelection = listOf(), upcomingSeriesSelection = listOf(), onTheatres = listOf() ))
+                    _movieGlobalList.emit(Result(state = State.Failed, movieSelection = listOf(), seriesSelection = listOf(), upcomingMoviesSelection = listOf(), upcomingSeriesSelection = listOf(), onTheatres = listOf() ))
                 }
             } catch (e: Exception) {
                 Log.e("ProductViewModel", e.message ?: "", e)
-                _movieList.emit(Result(state = State.Failed, movieSelection = listOf(), seriesSelection = listOf(), upcomingMoviesSelection = listOf(), upcomingSeriesSelection = listOf(), onTheatres = listOf()))
+                _movieGlobalList.emit(Result(state = State.Failed, movieSelection = listOf(), seriesSelection = listOf(), upcomingMoviesSelection = listOf(), upcomingSeriesSelection = listOf(), onTheatres = listOf()))
             }
         }
     }
@@ -83,24 +83,26 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
     fun getSearchMovies(searchText: String) {
       viewModelScope.launch{
           try {
-          val response = repository.getSearchMovies(searchText)
-          if(response.isSuccessful && response.body() != null){
-              var response = response.body()
-              if(response != null){
-                  _movieList.getAndUpdate {
-                      Result(
+              val movieResponse = repository.getSearchMovies(searchText)
+              val seriesResponse = repository.getSearchTvShow(searchText)
+
+              if(movieResponse.isSuccessful && movieResponse.body() != null && seriesResponse.isSuccessful && seriesResponse.body() != null ){
+                  var movieResponseBody = movieResponse.body()
+                  var seriesResponseBody = seriesResponse.body()
+
+                  _movieGlobalList.getAndUpdate {
+                        Result(
                           state = State.Searched,
-                          movieSelection = response.mList,
-                          seriesSelection = listOf(),
+                          movieSelection = movieResponseBody!!.mList,
+                          seriesSelection = seriesResponseBody!!.mList,
                           upcomingMoviesSelection = listOf(),
                           upcomingSeriesSelection = listOf(),
                           onTheatres = listOf(),
-                      )
+                        )
                   }
-              }
           }
           else{
-              _movieList.getAndUpdate {
+              _movieGlobalList.getAndUpdate {
                   Result(
                       state = State.Failed,
                       movieSelection = listOf(),
@@ -113,7 +115,7 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
           }
         } catch (e: Exception) {
             Log.e("HomeViewModel", e.message ?: "", e)
-              _movieList.getAndUpdate {
+              _movieGlobalList.getAndUpdate {
                   Result(
                       state = State.Failed,
                       movieSelection = listOf(),
