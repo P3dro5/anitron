@@ -1,8 +1,8 @@
 package com.example.anitron.ui.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
@@ -35,13 +36,13 @@ import coil.compose.AsyncImage
 import com.example.anitron.R
 import com.example.anitron.data.datasource.CategoryEntry
 import com.example.anitron.data.datasource.SearchWidgetState
-import com.example.anitron.ui.modelfactory.HomeViewModelFactory
-import com.example.anitron.databinding.ActivityMainBinding
+import com.example.anitron.data.datasource.State
 import com.example.anitron.data.repository.HomeRepository
+import com.example.anitron.databinding.ActivityMainBinding
 import com.example.anitron.domain.service.RetrofitService
+import com.example.anitron.ui.modelfactory.HomeViewModelFactory
 import com.example.anitron.ui.theme.fonts
 import com.example.anitron.ui.viewmodel.HomeViewModel
-import com.example.anitron.data.datasource.State
 
 
 class HomeActivity : AppCompatActivity() {
@@ -175,6 +176,94 @@ class HomeActivity : AppCompatActivity() {
                                     Spacer(
                                         modifier = Modifier.padding(20.dp)
                                     )
+                                    if(content.value.productionTeam.isNotEmpty()) {
+                                        Row(
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Spacer(
+                                                modifier = Modifier.padding(10.dp)
+                                            )
+                                            Text(
+                                                "People",
+                                                fontFamily = fonts,
+                                                fontWeight = FontWeight.ExtraBold,
+                                                fontSize = 20.sp,
+                                                color = Color.White,
+                                                modifier = Modifier.weight(1f)
+                                            )
+                                            Icon(modifier = Modifier
+                                                .clickable {
+                                                    val intent =
+                                                        Intent(
+                                                            context,
+                                                            ViewMoreActivity::class.java
+                                                        )
+                                                    intent.putExtra(
+                                                        "category",
+                                                        CategoryEntry.PopularMovies
+                                                    )
+                                                    intent.putExtra("isMovie", true)
+                                                    context.startActivity(intent)
+                                                }
+                                                .weight(0.1f),
+                                                imageVector = Icons.Default.ArrowForward,
+                                                contentDescription = "Forward",
+                                                tint = Color.White)
+                                        }
+                                        Spacer(
+                                            modifier = Modifier.padding(10.dp)
+                                        )
+                                        LazyRow {
+                                            itemsIndexed(content.value.productionTeam) { _, cast ->
+                                                Card(
+                                                    Modifier.width(100.dp),
+                                                    backgroundColor = Color.Transparent,
+                                                    elevation = 4.dp,
+                                                    content = {
+                                                        Row(
+                                                            modifier = Modifier
+                                                                .clickable {
+
+                                                                }
+                                                                .fillMaxWidth(), content = {
+                                                                Column(
+                                                                    modifier = Modifier.height(200.dp),
+                                                                    verticalArrangement = Arrangement.Center,
+                                                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                                                    content = {
+                                                                        AsyncImage(
+                                                                            contentScale = ContentScale.FillBounds,
+                                                                            alignment = Alignment.Center,
+                                                                            model = "https://image.tmdb.org/t/p/w300" + cast.personImgPath,
+                                                                            contentDescription = stringResource(
+                                                                                R.string.app_name
+                                                                            )
+                                                                        )
+                                                                        cast.name?.let {
+                                                                            Text(
+                                                                                text = it,
+                                                                                textAlign = TextAlign.Center,
+                                                                                fontFamily = fonts,
+                                                                                fontWeight = FontWeight.Normal,
+                                                                                fontSize = 15.sp,
+                                                                                color = Color.White,
+                                                                            )
+                                                                        }
+                                                                    }
+                                                                )
+                                                            }
+                                                        )
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+
+
+                                    Spacer(
+                                        modifier = Modifier.padding(20.dp)
+                                    )
+
                                     if(content.value.seriesSelection.isNotEmpty()) {
                                         Row(
                                             horizontalArrangement = Arrangement.SpaceBetween
