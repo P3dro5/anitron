@@ -85,6 +85,7 @@ class HomeActivity : AppCompatActivity() {
                             },
                             onCloseClicked = {
                                 viewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
+                                viewModel.getHomeScreenMoviesAndSeries()
                             },
                             onSearchClicked = {
                                 viewModel.getSearchMovies(searchText = it)
