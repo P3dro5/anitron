@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -329,6 +330,7 @@ class HomeActivity : AppCompatActivity() {
                                                                     context.startActivity(intent)
                                                                 },
                                                                 content = {
+                                                                    if(content.value.seriesSelection[index].poster != null){
                                                                     AsyncImage(
                                                                         contentScale = ContentScale.FillBounds,
                                                                         modifier = Modifier
@@ -337,6 +339,8 @@ class HomeActivity : AppCompatActivity() {
                                                                         model = "https://image.tmdb.org/t/p/w300" + content.value.seriesSelection[index].poster,
                                                                         contentDescription = null
                                                                     )
+                                                                }
+                                                                else Image(contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize(), alignment = Alignment.Center, painter = painterResource(R.drawable.ic_baseline_question_mark_24),contentDescription = "")
                                                                 }
                                                             )
                                                         }
