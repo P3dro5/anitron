@@ -150,7 +150,7 @@ class HomeActivity : AppCompatActivity() {
                                     Spacer(
                                         modifier = Modifier.padding(10.dp)
                                     )
-                                    LazyVerticalGrid(modifier = Modifier.height(730.dp), columns = GridCells.Fixed(4), userScrollEnabled = false, content = {
+                                    LazyVerticalGrid(modifier = Modifier.heightIn(max= 800.dp), columns = GridCells.Fixed(4), userScrollEnabled = false, content = {
                                         items(content.value.movieSelection.size) { index ->
                                             Card(
                                                 elevation = 4.dp,
@@ -303,7 +303,7 @@ class HomeActivity : AppCompatActivity() {
                                             modifier = Modifier.padding(10.dp)
                                         )
                                         LazyVerticalGrid(
-                                            modifier = Modifier.height(730.dp),
+                                            modifier = Modifier.heightIn(max= 800.dp),
                                             columns = GridCells.Fixed(4),
                                             userScrollEnabled = false,
                                             content = {
