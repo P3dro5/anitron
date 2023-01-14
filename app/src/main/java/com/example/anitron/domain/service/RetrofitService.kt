@@ -1,6 +1,8 @@
 package com.example.anitron.domain.service
 import com.example.anitron.data.datasource.MovieList
 import com.example.anitron.BuildConfig
+import com.example.anitron.data.datasource.People
+import com.example.anitron.data.datasource.PersonDetails
 import com.example.anitron.data.datasource.movieInfo.MovieInfo
 import com.example.anitron.data.datasource.tvshowInfo.TvShowInfo
 import okhttp3.OkHttpClient
@@ -33,6 +35,15 @@ interface RetrofitService {
 
     @GET("3/tv/{i}?language=en-US")
     suspend fun getTvShowOnClick(@Path("i") imdbId : String): Response<TvShowInfo>
+
+    @GET("3/search/movie?language=en-US")
+    suspend fun getSearchMovies(@Query("query") searchQuery : String): Response<MovieList>
+
+    @GET("3/search/tv?language=en-US")
+    suspend fun getSearchTvShows(@Query("query") searchQuery : String): Response<MovieList>
+
+    @GET("3/search/person?language=en-US")
+    suspend fun getSearchPeople(@Query("query") searchQuery : String): Response<PersonDetails>
 
     companion object {
 
