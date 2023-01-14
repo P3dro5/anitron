@@ -157,7 +157,14 @@ class HomeActivity : AppCompatActivity() {
                                                 backgroundColor = Color.Transparent,
                                                 content = {
                                                     Row(
-                                                        modifier = Modifier.fillMaxSize(),
+                                                        modifier = Modifier.fillMaxSize()
+                                                            .clickable {
+                                                                val intent =
+                                                                    Intent(context, InfoActivity::class.java)
+                                                                intent.putExtra("id", content.value.movieSelection[index].id)
+                                                                intent.putExtra("isMovie", true)
+                                                                context.startActivity(intent)
+                                                        },
                                                         content = {
                                                             AsyncImage(
                                                                 contentScale = ContentScale.FillBounds,
@@ -313,7 +320,14 @@ class HomeActivity : AppCompatActivity() {
                                                         backgroundColor = Color.Transparent,
                                                         content = {
                                                             Row(
-                                                                modifier = Modifier.fillMaxSize(),
+                                                                modifier = Modifier.fillMaxSize()
+                                                                    .clickable {
+                                                                    val intent =
+                                                                        Intent(context, InfoActivity::class.java)
+                                                                    intent.putExtra("id", content.value.seriesSelection[index].id)
+                                                                    intent.putExtra("isMovie", false)
+                                                                    context.startActivity(intent)
+                                                                },
                                                                 content = {
                                                                     AsyncImage(
                                                                         contentScale = ContentScale.FillBounds,
