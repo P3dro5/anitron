@@ -156,25 +156,27 @@ class HomeActivity : AppCompatActivity() {
                                             Card(
                                                 elevation = 4.dp,
                                                 backgroundColor = Color.Transparent,
+                                                modifier = Modifier.height(150.dp).clickable {
+                                                    val intent =
+                                                        Intent(context, InfoActivity::class.java)
+                                                    intent.putExtra("id", content.value.movieSelection[index].id)
+                                                    intent.putExtra("isMovie", true)
+                                                    context.startActivity(intent)
+                                                },
                                                 content = {
                                                     Row(
-                                                        modifier = Modifier.fillMaxSize()
-                                                            .clickable {
-                                                                val intent =
-                                                                    Intent(context, InfoActivity::class.java)
-                                                                intent.putExtra("id", content.value.movieSelection[index].id)
-                                                                intent.putExtra("isMovie", true)
-                                                                context.startActivity(intent)
-                                                        },
+                                                        modifier = Modifier.fillMaxSize(),
                                                         content = {
-                                                            AsyncImage(
-                                                                contentScale = ContentScale.FillBounds,
-                                                                modifier = Modifier
-                                                                    .fillMaxSize(),
-                                                                alignment = Alignment.Center,
-                                                                model = "https://image.tmdb.org/t/p/w300" + content.value.movieSelection[index].poster,
-                                                                contentDescription = null
-                                                            )
+                                                            if (content.value.movieSelection[index].poster != null) {
+                                                                AsyncImage(
+                                                                    contentScale = ContentScale.FillBounds,
+                                                                    modifier = Modifier
+                                                                        .fillMaxSize(),
+                                                                    alignment = Alignment.Center,
+                                                                    model = "https://image.tmdb.org/t/p/w300" + content.value.movieSelection[index].poster,
+                                                                    contentDescription = null
+                                                                )
+                                                            } else Image(modifier = Modifier.fillMaxSize(), alignment = Alignment.Center, painter = painterResource(R.drawable.ic_baseline_question_mark_24),contentDescription = "")
                                                         }
                                                     )
                                                 }
@@ -319,16 +321,16 @@ class HomeActivity : AppCompatActivity() {
                                                     Card(
                                                         elevation = 4.dp,
                                                         backgroundColor = Color.Transparent,
+                                                        modifier = Modifier.height(150.dp).clickable {
+                                                        val intent =
+                                                            Intent(context, InfoActivity::class.java)
+                                                        intent.putExtra("id", content.value.seriesSelection[index].id)
+                                                        intent.putExtra("isMovie", false)
+                                                        context.startActivity(intent)
+                                                    },
                                                         content = {
                                                             Row(
-                                                                modifier = Modifier.fillMaxSize()
-                                                                    .clickable {
-                                                                    val intent =
-                                                                        Intent(context, InfoActivity::class.java)
-                                                                    intent.putExtra("id", content.value.seriesSelection[index].id)
-                                                                    intent.putExtra("isMovie", false)
-                                                                    context.startActivity(intent)
-                                                                },
+                                                                modifier = Modifier.fillMaxSize(),
                                                                 content = {
                                                                     if(content.value.seriesSelection[index].poster != null){
                                                                     AsyncImage(
@@ -340,7 +342,7 @@ class HomeActivity : AppCompatActivity() {
                                                                         contentDescription = null
                                                                     )
                                                                 }
-                                                                else Image(contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize(), alignment = Alignment.Center, painter = painterResource(R.drawable.ic_baseline_question_mark_24),contentDescription = "")
+                                                                else Image(modifier = Modifier.fillMaxSize(), alignment = Alignment.Center, painter = painterResource(R.drawable.ic_baseline_question_mark_24),contentDescription = "")
                                                                 }
                                                             )
                                                         }
