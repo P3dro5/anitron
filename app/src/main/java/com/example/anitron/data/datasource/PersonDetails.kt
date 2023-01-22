@@ -8,7 +8,7 @@ data class PersonDetails (
 )
 
 data class SearchedPerson (
-    @SerializedName("id") var id: String?,
-    @SerializedName("name") var name: String?,
-    @SerializedName("profile_path") var personImgPath: String?,
+    @SerializedName("id") var id: String,
+    @SerializedName("name") var name: String,
+    @SerializedName("profile_path") var personImgPath: String,
 )
