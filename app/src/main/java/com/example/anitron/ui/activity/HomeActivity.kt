@@ -513,7 +513,7 @@ class HomeActivity : AppCompatActivity() {
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Text(
-                                            "On Theatres",
+                                            "Upcoming Movies",
                                             fontFamily = fonts,
                                             fontWeight = FontWeight.ExtraBold,
                                             fontSize = 20.sp,
@@ -529,7 +529,7 @@ class HomeActivity : AppCompatActivity() {
                                                     )
                                                 intent.putExtra(
                                                     "category",
-                                                    CategoryEntry.OnTheatres
+                                                    CategoryEntry.UpcomingMovies
                                                 )
                                                 intent.putExtra("isMovie", true)
                                                 context.startActivity(intent)
@@ -542,9 +542,8 @@ class HomeActivity : AppCompatActivity() {
                                     Spacer(
                                         modifier = Modifier.padding(10.dp)
                                     )
-
                                     LazyRow {
-                                        itemsIndexed(content.value.onTheatres) { _, movieSelected ->
+                                        itemsIndexed(content.value.upcomingMoviesSelection) { _, movieSelected ->
                                             Card(
                                                 elevation = 4.dp,
                                                 backgroundColor = Color.Transparent,
@@ -590,12 +589,13 @@ class HomeActivity : AppCompatActivity() {
                                     Spacer(
                                         modifier = Modifier.padding(15.dp)
                                     )
+
                                     Row(
                                         modifier = Modifier.fillMaxHeight(),
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Text(
-                                            "Upcoming Movies",
+                                            "On Theatres",
                                             fontFamily = fonts,
                                             fontWeight = FontWeight.ExtraBold,
                                             fontSize = 20.sp,
@@ -611,7 +611,7 @@ class HomeActivity : AppCompatActivity() {
                                                     )
                                                 intent.putExtra(
                                                     "category",
-                                                    CategoryEntry.UpcomingMovies
+                                                    CategoryEntry.OnTheatres
                                                 )
                                                 intent.putExtra("isMovie", true)
                                                 context.startActivity(intent)
@@ -626,7 +626,7 @@ class HomeActivity : AppCompatActivity() {
                                     )
 
                                     LazyRow {
-                                        itemsIndexed(content.value.upcomingMoviesSelection) { _, movieSelected ->
+                                        itemsIndexed(content.value.onTheatres) { _, movieSelected ->
                                             Card(
                                                 elevation = 4.dp,
                                                 backgroundColor = Color.Transparent,
