@@ -37,13 +37,13 @@ interface RetrofitService {
     suspend fun getTvShowOnClick(@Path("i") imdbId : String): Response<TvShowInfo>
 
     @GET("3/search/movie?language=en-US")
-    suspend fun getSearchMovies(@Query("query") searchQuery : String): Response<MovieList>
+    suspend fun getSearchMovies(@Query("page") page : String, @Query("query") searchQuery : String): Response<MovieList>
 
     @GET("3/search/tv?language=en-US")
-    suspend fun getSearchTvShows(@Query("query") searchQuery : String): Response<MovieList>
+    suspend fun getSearchTvShows(@Query("page") page : String, @Query("query") searchQuery : String): Response<MovieList>
 
     @GET("3/search/person?language=en-US")
-    suspend fun getSearchPeople(@Query("query") searchQuery : String): Response<PersonDetails>
+    suspend fun getSearchPeople(@Query("page") page : String, @Query("query") searchQuery : String): Response<PersonDetails>
 
     companion object {
 

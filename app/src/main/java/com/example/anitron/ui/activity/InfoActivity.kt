@@ -63,11 +63,7 @@ class InfoActivity : AppCompatActivity() {
                     }
                 } else {
                     if (movieTvShowId != null) {
-                        try {
-                            viewModel.getShowOnClick(movieTvShowId)
-                        }catch (e: Exception){
-                            Log.d("A "+ e.message,"WTFFFF")
-                        }
+                        viewModel.getShowOnClick(movieTvShowId)
                     }
                 }
                 val tvShow = viewModel.tvShowInfo.collectAsState()

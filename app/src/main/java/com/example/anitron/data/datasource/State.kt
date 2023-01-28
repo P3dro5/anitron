@@ -17,5 +17,8 @@ enum class CategoryEntry {
     OnTheatres,
     UpcomingMovies,
     ShowsCurrentlyAiring,
+    SearchedMovies,
+    SearchedTvShows,
+    SearchedPeople,
     None
 }

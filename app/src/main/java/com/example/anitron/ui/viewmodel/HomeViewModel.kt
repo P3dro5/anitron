@@ -82,9 +82,9 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
     fun getSearchMovies(searchText: String) {
       viewModelScope.launch{
           try {
-              val movieResponse = repository.getSearchMovies(searchText)
-              val seriesResponse = repository.getSearchTvShow(searchText)
-              val peopleResponse = repository.getSearchPeople(searchText)
+              val movieResponse = repository.getSearchMovies("1", searchText)
+              val seriesResponse = repository.getSearchTvShow("1", searchText)
+              val peopleResponse = repository.getSearchPeople("1", searchText)
 
               if(movieResponse.isSuccessful && movieResponse.body() != null && seriesResponse.isSuccessful && seriesResponse.body() != null && peopleResponse.isSuccessful && peopleResponse.body() != null){
                   var movieResponseBody = movieResponse.body()

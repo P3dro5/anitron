@@ -44,6 +44,7 @@ class ViewMoreActivity : AppCompatActivity() {
         setContentView(binding.root)
         val category = intent.getSerializableExtra("category")
         val isMovie = intent.getBooleanExtra("isMovie", false)
+        val searchedQuery = intent.getStringExtra("searchedQuery")
 
         viewModel = ViewModelProvider(
             this,
@@ -68,6 +69,11 @@ class ViewMoreActivity : AppCompatActivity() {
                     }
                     CategoryEntry.ShowsCurrentlyAiring -> {
                         viewModel.getShowsCurrentlyAiringList()
+                    }
+                    CategoryEntry.SearchedMovies -> {
+                        if (searchedQuery != null) {
+                            viewModel.getSearchedMoviesList(searchedQuery)
+                        }
                     }
                 }
 

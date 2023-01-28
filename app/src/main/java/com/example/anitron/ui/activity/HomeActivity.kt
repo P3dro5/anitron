@@ -54,6 +54,8 @@ class HomeActivity : AppCompatActivity() {
 
     private val retrofitService = RetrofitService.getInstance()
 
+    private lateinit var searchedQuery: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -138,8 +140,9 @@ class HomeActivity : AppCompatActivity() {
                                                     )
                                                 intent.putExtra(
                                                     "category",
-                                                    CategoryEntry.PopularMovies
+                                                    CategoryEntry.SearchedMovies
                                                 )
+                                                intent.putExtra("searchedQuery", searchedQuery)
                                                 intent.putExtra("isMovie", true)
                                                 context.startActivity(intent)
                                             }
@@ -850,6 +853,7 @@ class HomeActivity : AppCompatActivity() {
                     .fillMaxWidth(),
                 value = text,
                 onValueChange = {
+                    searchedQuery = it
                     onTextChange(it)
                 },
                 placeholder = {
