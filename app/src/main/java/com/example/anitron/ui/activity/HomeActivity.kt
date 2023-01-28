@@ -205,24 +205,7 @@ class HomeActivity : AppCompatActivity() {
                                                 color = Color.White,
                                                 modifier = Modifier.weight(1f)
                                             )
-                                            Icon(modifier = Modifier
-                                                .clickable {
-                                                    val intent =
-                                                        Intent(
-                                                            context,
-                                                            ViewMoreActivity::class.java
-                                                        )
-                                                    intent.putExtra(
-                                                        "category",
-                                                        CategoryEntry.PopularMovies
-                                                    )
-                                                    intent.putExtra("isMovie", true)
-                                                    context.startActivity(intent)
-                                                }
-                                                .weight(0.1f),
-                                                imageVector = Icons.Default.ArrowForward,
-                                                contentDescription = "Forward",
-                                                tint = Color.White)
+                                            // TODO("Missing implementing view more functionality for people")
                                         }
                                         Spacer(
                                             modifier = Modifier.padding(10.dp)

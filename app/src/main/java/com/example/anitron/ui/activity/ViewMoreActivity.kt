@@ -3,11 +3,9 @@ package com.example.anitron.ui.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.collectAsState
@@ -16,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
@@ -53,7 +52,7 @@ class ViewMoreActivity : AppCompatActivity() {
 
         findViewById<ComposeView>(binding.viewMoreScreenDisplay.id)
             .setContent {
-                val movie = viewModel.entries.collectAsState()
+                val entries = viewModel.entries.collectAsState()
                 when(category){
                     CategoryEntry.PopularMovies -> {
                         viewModel.getPopularMovieList()
@@ -83,33 +82,36 @@ class ViewMoreActivity : AppCompatActivity() {
 
                 }
 
-                when (movie.value.state) {
+                when (entries.value.state) {
                     State.Loading -> {}
                     State.Success -> {
                         LazyVerticalGrid(columns = GridCells.Fixed(3), content = {
-                            items(movie.value.movies.size) { index ->
+                            items(entries.value.movies.size) { index ->
                                 val context = LocalContext.current
                                 Row(
-                                    modifier = Modifier
+                                    modifier = Modifier.height(200.dp)
                                         .clickable {
                                             val intent =
                                                 Intent(context, InfoActivity::class.java)
-                                            intent.putExtra("id", movie.value.movies[index].id)
+                                            intent.putExtra("id", entries.value.movies[index].id)
                                             intent.putExtra("isMovie", isMovie)
                                             context.startActivity(intent)
                                         }
                                         .fillMaxWidth(), content = {
                                         Row(
+                                            modifier = Modifier.fillMaxSize(),
                                             content = {
-                                                AsyncImage(
-                                                    contentScale = ContentScale.FillBounds,
-                                                    modifier = Modifier
-                                                        .fillMaxSize()
-                                                        .size(200.dp),
-                                                    alignment = Alignment.Center,
-                                                    model = "https://image.tmdb.org/t/p/w500" + movie.value.movies[index].poster,
-                                                    contentDescription = stringResource(R.string.app_name)
-                                                )
+                                                if (entries.value.movies[index].poster != null) {
+                                                    AsyncImage(
+                                                        contentScale = ContentScale.FillBounds,
+                                                        modifier = Modifier
+                                                            .fillMaxSize(),
+                                                        alignment = Alignment.Center,
+                                                        model = "https://image.tmdb.org/t/p/w500" + entries.value.movies[index].poster,
+                                                        contentDescription = stringResource(R.string.app_name)
+                                                    )
+                                                }
+                                                else Image(modifier = Modifier.fillMaxSize(), contentScale = ContentScale.FillWidth, alignment = Alignment.Center, painter = painterResource(R.drawable.ic_baseline_question_mark_24),contentDescription = "")
                                             }
                                         )
                                     }

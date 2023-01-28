@@ -18,7 +18,7 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
     private val _movieGlobalList = MutableStateFlow(Result(state = State.Loading, movieSelection = listOf(), seriesSelection = listOf(), productionTeam = listOf(), upcomingMoviesSelection = listOf(), upcomingSeriesSelection = listOf(), onTheatres = listOf()))
     var movieList = _movieGlobalList
 
-    var cachedList = _movieGlobalList.value
+    private var cachedList = _movieGlobalList.value
 
     private val _searchWidgetState: MutableState<SearchWidgetState> =
         mutableStateOf(value = SearchWidgetState.CLOSED)
@@ -32,14 +32,8 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
         _searchWidgetState.value = newValue
     }
 
-    /*fun searchMovies(value: List<Movie>){
-        _queryList.value = ResultSearch(state = State.Loading, querySelection = value)
-    }*/
     fun updateSearchTextState(newValue: String) {
         _searchTextState.value = newValue
-    }
-    fun getSearchTextState():String{
-        return _searchTextState.value
     }
 
     fun closeSearchBar(){
