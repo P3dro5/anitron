@@ -11,14 +11,14 @@ import kotlinx.coroutines.launch
 
 class ViewMoreViewModel(private val repository: HomeRepository): ViewModel() {
     private val _entries =
-        MutableStateFlow(ViewMoreMovieResult(state = State.Loading, movies = arrayListOf()))
+        MutableStateFlow(ViewMoreEntryResult(state = State.Loading, movies = arrayListOf()))
     var entries = _entries
 
     private val movieTvShowList: MutableList<Movie> = arrayListOf()
 
     suspend fun getList(movieList: MutableList<Movie>) {
         _entries.emit(
-            ViewMoreMovieResult(
+            ViewMoreEntryResult(
                 state = State.Success,
                 movies = movieList,
             )
@@ -37,7 +37,7 @@ class ViewMoreViewModel(private val repository: HomeRepository): ViewModel() {
 
             } catch (e: Exception) {
                 Log.e("ViewMoreMovieResult", e.message ?: "", e)
-                _entries.emit(ViewMoreMovieResult(state = State.Failed, movies = arrayListOf()))
+                _entries.emit(ViewMoreEntryResult(state = State.Failed, movies = arrayListOf()))
             }
         }
     }
@@ -53,8 +53,8 @@ class ViewMoreViewModel(private val repository: HomeRepository): ViewModel() {
                 getList(movieTvShowList)
 
             } catch (e: Exception) {
-                Log.e("ViewMoreMovieResult", e.message ?: "", e)
-                _entries.emit(ViewMoreMovieResult(state = State.Failed, movies = arrayListOf()))
+                Log.e("ViewMoreTvShowResult", e.message ?: "", e)
+                _entries.emit(ViewMoreEntryResult(state = State.Failed, movies = arrayListOf()))
             }
         }
     }
@@ -71,7 +71,7 @@ class ViewMoreViewModel(private val repository: HomeRepository): ViewModel() {
 
             } catch (e: Exception) {
                 Log.e("ViewMoreMovieResult", e.message ?: "", e)
-                _entries.emit(ViewMoreMovieResult(state = State.Failed, movies = arrayListOf()))
+                _entries.emit(ViewMoreEntryResult(state = State.Failed, movies = arrayListOf()))
             }
         }
     }
@@ -88,7 +88,7 @@ class ViewMoreViewModel(private val repository: HomeRepository): ViewModel() {
 
             } catch (e: Exception) {
                 Log.e("ViewMoreMovieResult", e.message ?: "", e)
-                _entries.emit(ViewMoreMovieResult(state = State.Failed, movies = arrayListOf()))
+                _entries.emit(ViewMoreEntryResult(state = State.Failed, movies = arrayListOf()))
             }
         }
     }
@@ -104,13 +104,46 @@ class ViewMoreViewModel(private val repository: HomeRepository): ViewModel() {
                 getList(movieTvShowList)
 
             } catch (e: Exception) {
-                Log.e("ViewMoreMovieResult", e.message ?: "", e)
-                _entries.emit(ViewMoreMovieResult(state = State.Failed, movies = arrayListOf()))
+                Log.e("ViewMoreTvShowResult", e.message ?: "", e)
+                _entries.emit(ViewMoreEntryResult(state = State.Failed, movies = arrayListOf()))
             }
         }
     }
 
+    fun getSearchedMoviesList(searchedQuery : String){
+        viewModelScope.launch {
+            try {
+                for (i in 1..5) {
+                    var searchedMovieResponses = repository.getSearchMovies(i.toString(), searchedQuery)
+                    for (movie in searchedMovieResponses.body()!!.mList)
+                        movieTvShowList.add(movie)
+                }
+                getList(movieTvShowList)
+
+            } catch (e: Exception) {
+                Log.e("ViewMoreMovieResult", e.message ?: "", e)
+                _entries.emit(ViewMoreEntryResult(state = State.Failed, movies = arrayListOf()))
+            }
+        }
+    }
+
+    fun getSearchedTvShowList(searchedQuery : String){
+        viewModelScope.launch {
+            try {
+                for (i in 1..5) {
+                    var searchedTvShowResponses = repository.getSearchTvShow(i.toString(), searchedQuery)
+                    for (tvShow in searchedTvShowResponses.body()!!.mList)
+                        movieTvShowList.add(tvShow)
+                }
+                getList(movieTvShowList)
+
+            } catch (e: Exception) {
+                Log.e("ViewMoreTvShowResult", e.message ?: "", e)
+                _entries.emit(ViewMoreEntryResult(state = State.Failed, movies = arrayListOf()))
+            }
+        }
+    }
 
 }
 
-data class ViewMoreMovieResult(val state: State, val movies: List<Movie>)
+data class ViewMoreEntryResult(val state: State, val movies: List<Movie>)

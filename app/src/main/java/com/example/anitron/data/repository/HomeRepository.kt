@@ -9,8 +9,8 @@ class HomeRepository(private val retrofitService: RetrofitService) {
     suspend fun getUpcMovies(page : String) = retrofitService.getUpcomingMovies(page)
     suspend fun getOnAir(page : String) = retrofitService.getOnTheAir(page)
     suspend fun getOnTheatres(page : String) = retrofitService.getOnTheatresMovies(page)
-    suspend fun getSearchMovies(searchQuery: String) = retrofitService.getSearchMovies(searchQuery)
-    suspend fun getSearchTvShow(searchQuery: String) = retrofitService.getSearchTvShows(searchQuery)
-    suspend fun getSearchPeople(searchQuery: String) = retrofitService.getSearchPeople(searchQuery)
+    suspend fun getSearchMovies(page: String, searchQuery: String) = retrofitService.getSearchMovies(page, searchQuery)
+    suspend fun getSearchTvShow(page: String, searchQuery: String) = retrofitService.getSearchTvShows(page, searchQuery)
+    suspend fun getSearchPeople(page: String, searchQuery: String) = retrofitService.getSearchPeople(page, searchQuery)
 
 }
