@@ -299,9 +299,10 @@ class HomeActivity : AppCompatActivity() {
                                                         )
                                                     intent.putExtra(
                                                         "category",
-                                                        CategoryEntry.PopularMovies
+                                                        CategoryEntry.SearchedTvShows
                                                     )
-                                                    intent.putExtra("isMovie", true)
+                                                    intent.putExtra("searchedQuery", searchedQuery)
+                                                    intent.putExtra("isMovie", false)
                                                     context.startActivity(intent)
                                                 }
                                                 .weight(0.1f),

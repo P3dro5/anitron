@@ -75,6 +75,12 @@ class ViewMoreActivity : AppCompatActivity() {
                             viewModel.getSearchedMoviesList(searchedQuery)
                         }
                     }
+                    CategoryEntry.SearchedTvShows -> {
+                        if (searchedQuery != null) {
+                            viewModel.getSearchedTvShowList(searchedQuery)
+                        }
+                    }
+
                 }
 
                 when (movie.value.state) {

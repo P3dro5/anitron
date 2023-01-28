@@ -127,6 +127,23 @@ class ViewMoreViewModel(private val repository: HomeRepository): ViewModel() {
         }
     }
 
+    fun getSearchedTvShowList(searchedQuery : String){
+        viewModelScope.launch {
+            try {
+                for (i in 1..5) {
+                    var searchedTvShowResponses = repository.getSearchTvShow(i.toString(), searchedQuery)
+                    for (tvShow in searchedTvShowResponses.body()!!.mList)
+                        movieTvShowList.add(tvShow)
+                }
+                getList(movieTvShowList)
+
+            } catch (e: Exception) {
+                Log.e("ViewMoreMovieResult", e.message ?: "", e)
+                _entries.emit(ViewMoreMovieResult(state = State.Failed, movies = arrayListOf()))
+            }
+        }
+    }
+
 }
 
 data class ViewMoreMovieResult(val state: State, val movies: List<Movie>)
