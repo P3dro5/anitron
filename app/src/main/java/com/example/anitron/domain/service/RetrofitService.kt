@@ -1,9 +1,10 @@
 package com.example.anitron.domain.service
 import com.example.anitron.data.datasource.MovieList
 import com.example.anitron.BuildConfig
-import com.example.anitron.data.datasource.People
 import com.example.anitron.data.datasource.PersonDetails
 import com.example.anitron.data.datasource.movieInfo.MovieInfo
+import com.example.anitron.data.datasource.tvshowInfo.MediaAppearances
+import com.example.anitron.data.datasource.tvshowInfo.Person
 import com.example.anitron.data.datasource.tvshowInfo.TvShowInfo
 import okhttp3.OkHttpClient
 import retrofit2.Response
@@ -44,6 +45,15 @@ interface RetrofitService {
 
     @GET("3/search/person?language=en-US")
     suspend fun getSearchPeople(@Query("page") page : String, @Query("query") searchQuery : String): Response<PersonDetails>
+
+    @GET("3/search/person/{person_id}/movie_credits?language=en-US")
+    suspend fun getMoviePersonCredits(@Path("person_id") id : String): Response<MediaAppearances>
+
+    @GET("3/search/person/{person_id}/tv_credits?language=en-US")
+    suspend fun getTvPersonCredits(@Path("person_id") id : String): Response<MediaAppearances>
+
+    @GET("3/search/person/{person_id}?language=en-US")
+    suspend fun getPersonDetail(@Path("person_id") id : String): Response<Person>
 
     companion object {
 

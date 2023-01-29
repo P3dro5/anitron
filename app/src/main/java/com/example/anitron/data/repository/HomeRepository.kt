@@ -12,5 +12,7 @@ class HomeRepository(private val retrofitService: RetrofitService) {
     suspend fun getSearchMovies(page: String, searchQuery: String) = retrofitService.getSearchMovies(page, searchQuery)
     suspend fun getSearchTvShow(page: String, searchQuery: String) = retrofitService.getSearchTvShows(page, searchQuery)
     suspend fun getSearchPeople(page: String, searchQuery: String) = retrofitService.getSearchPeople(page, searchQuery)
-
+    suspend fun getMoviePersonCredits(personId: String) = retrofitService.getMoviePersonCredits(personId)
+    suspend fun getMovieTvCredits(personId: String) = retrofitService.getTvPersonCredits(personId)
+    suspend fun getPersonDetail(personId: String) = retrofitService.getPersonDetail(personId)
 }
