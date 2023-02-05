@@ -2,7 +2,7 @@ package com.example.anitron.data.datasource.tvshowInfo
 
 import com.google.gson.annotations.SerializedName
 
-data class Person (
+data class PersonInfo (
     @SerializedName("biography") var biography : String,
     @SerializedName("birthday") var birthday : String,
     @SerializedName("deathday") var deathDay : String,

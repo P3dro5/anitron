@@ -211,7 +211,7 @@ class HomeActivity : AppCompatActivity() {
                                             modifier = Modifier.padding(10.dp)
                                         )
                                         LazyRow {
-                                            itemsIndexed(content.value.productionTeam) { _, cast ->
+                                            itemsIndexed(content.value.productionTeam) { index, cast ->
                                                 Card(
                                                     modifier = Modifier.width(110.dp),
                                                     backgroundColor = Color.Transparent,
@@ -221,6 +221,7 @@ class HomeActivity : AppCompatActivity() {
                                                                 Column(
                                                                     modifier = Modifier.height(200.dp).clickable {
                                                                         val intent = Intent(context, PersonInfoActivity::class.java)
+                                                                        intent.putExtra("id", content.value.productionTeam[index].id)
                                                                         context.startActivity(intent)
                                                                     },
                                                                     horizontalAlignment = Alignment.CenterHorizontally,

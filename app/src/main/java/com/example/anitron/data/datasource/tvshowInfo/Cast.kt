@@ -16,7 +16,7 @@ data class Cast (
     @SerializedName("title")
     var title:String?,
     @SerializedName("genre_ids")
-    var genreIds:String?,
+    var genreIds:List<String>,
     @SerializedName("popularity")
     var popularity:String?,
     @SerializedName("id")
