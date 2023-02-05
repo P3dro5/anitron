@@ -213,14 +213,16 @@ class HomeActivity : AppCompatActivity() {
                                         LazyRow {
                                             itemsIndexed(content.value.productionTeam) { _, cast ->
                                                 Card(
-                                                    Modifier.width(110.dp).clickable {
-
-                                                    },
+                                                    modifier = Modifier.width(110.dp),
                                                     backgroundColor = Color.Transparent,
                                                     elevation = 1.dp,
                                                     content = {
+                                                                val context = LocalContext.current
                                                                 Column(
-                                                                    modifier = Modifier.height(200.dp),
+                                                                    modifier = Modifier.height(200.dp).clickable {
+                                                                        val intent = Intent(context, PersonInfoActivity::class.java)
+                                                                        context.startActivity(intent)
+                                                                    },
                                                                     horizontalAlignment = Alignment.CenterHorizontally,
                                                                     content = {
                                                                         if(cast.personImgPath != null) {
