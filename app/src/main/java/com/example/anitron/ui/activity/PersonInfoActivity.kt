@@ -3,10 +3,12 @@ package com.example.anitron.ui.activity
 import android.app.Person
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,6 +24,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import com.example.anitron.R
 import com.example.anitron.data.datasource.State
 import com.example.anitron.data.datasource.tvshowInfo.PersonInfo
 import com.example.anitron.data.repository.PersonInfoRepository
@@ -78,11 +81,95 @@ class PersonInfoActivity: AppCompatActivity(){
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/w500" + personInfo.profilePersonImage),
-                contentDescription = null,
-                modifier = Modifier.size(328.dp)
-            )
+            Card(
+                backgroundColor = Color.Transparent,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+                    .fillMaxSize(), elevation = 0.dp
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/w500" + personInfo.profilePersonImage),
+                        contentDescription = null,
+                        modifier = Modifier.size(328.dp)
+                    )
+                    Row(
+                        modifier = Modifier.padding(10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            personInfo.name,
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            modifier = Modifier.weight(1f)
+                        )
+                        if(personInfo.birthday != null) {
+                            Text(
+                                "Born in " +
+                                        personInfo.birthday,
+                                fontFamily = fonts,
+                                fontWeight = FontWeight.Normal,
+                                modifier = Modifier.weight(0.5f),
+                                fontSize = 15.sp,
+                                color = Color.White
+                            )
+                        }
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxHeight(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                "Role: " + personInfo.role,
+                                modifier = Modifier.padding(5.dp).weight(1f),
+                                fontFamily = fonts,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp,
+                                color = Color.White,
+                            )
+                            if(personInfo.deathDay != null) {
+                                Text(
+                                    "Died: " + personInfo.deathDay,
+                                    fontFamily = fonts,
+                                    fontWeight = FontWeight.Normal,
+                                    modifier = Modifier.weight(0.5f),
+                                    fontSize = 15.sp,
+                                    color = Color.White
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.padding(15.dp))
+                        if(personInfo.biography != null) {
+                            Text(
+                                personInfo.biography,
+                                fontFamily = fonts,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 15.sp,
+                                color = Color.White,
+                            )
+                        }
+
+
+
+                    }
+
+                }
+            }
+
         }
     }
 }
