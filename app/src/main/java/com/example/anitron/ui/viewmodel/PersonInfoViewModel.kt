@@ -18,8 +18,8 @@ class PersonInfoViewModel(private val repository: PersonInfoRepository) : ViewMo
         viewModelScope.launch {
             try {
                 val personDetailResponse = repository.getPersonDetail(id)
-                val movieCreditsResponse = repository.getTvPersonCredits(id)
-                val tvShowCreditsResponse = repository.getMoviePersonCredits(id)
+                val movieCreditsResponse = repository.getMoviePersonCredits(id)
+                val tvShowCreditsResponse = repository.getTvPersonCredits(id)
                 if (personDetailResponse.isSuccessful && movieCreditsResponse.isSuccessful && tvShowCreditsResponse.isSuccessful) {
                     _personInfo.emit(
                         PersonInfoResult(
