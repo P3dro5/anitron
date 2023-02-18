@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 class Credits(
     @SerializedName("id")
-    var id:String?,
+    var id:String,
     @SerializedName("cast")
-    var cast:List<MediaCast?>
+    var cast:List<MediaCast>
 )

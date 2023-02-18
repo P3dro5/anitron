@@ -57,7 +57,7 @@ interface RetrofitService {
     suspend fun getPersonDetail(@Path("person_id") id : String): Response<PersonInfo>
 
     @GET("3/movie/{movie_id}/credits?language=en-US")
-    suspend fun getMovieCastCredits(@Path("person_id") id : String): Response<Credits>
+    suspend fun getMovieCastCredits(@Path("movie_id") id : String): Response<Credits>
 
     @GET("3/tv/{tv_id}/credits?language=en-US")
     suspend fun getTvShowCastCredits(@Path("tv_id") id : String): Response<Credits>

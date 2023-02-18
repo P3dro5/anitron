@@ -22,8 +22,8 @@ class InfoViewModel(private val repository: MovieInfoRepository): ViewModel() {
     fun getMovieOnClick(id: String){
         viewModelScope.launch{
             try {
-                val response = repository.getMovieSelected(id)
                 val movieCredits = repository.getMovieCastCredits(id)
+                val response = repository.getMovieSelected(id)
                 if (response.isSuccessful && response.body() != null) {
                     _movieInfo.emit(
                         MovieInfoResult(
