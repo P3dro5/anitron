@@ -1,4 +1,4 @@
-package com.example.anitron.data.datasource.tvshowInfo
+package com.example.anitron.data.datasource.info.personInfo
 
 import com.google.gson.annotations.SerializedName
 

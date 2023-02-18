@@ -1,10 +1,8 @@
 package com.example.anitron.ui.activity
 
-import android.app.Person
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,20 +21,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.anitron.R
-import com.example.anitron.data.datasource.CategoryEntry
 import com.example.anitron.data.datasource.State
-import com.example.anitron.data.datasource.tvshowInfo.MediaAppearances
-import com.example.anitron.data.datasource.tvshowInfo.PersonInfo
+import com.example.anitron.data.datasource.info.personInfo.MediaAppearances
+import com.example.anitron.data.datasource.info.personInfo.PersonInfo
 import com.example.anitron.data.repository.PersonInfoRepository
 import com.example.anitron.databinding.PersonInfoBinding
 import com.example.anitron.domain.service.RetrofitService

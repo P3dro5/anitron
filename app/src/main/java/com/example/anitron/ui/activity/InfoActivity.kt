@@ -2,7 +2,6 @@ package com.example.anitron.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -24,9 +23,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import coil.compose.rememberAsyncImagePainter
 import com.example.anitron.R
-import com.example.anitron.data.datasource.movieInfo.MovieInfo
+import com.example.anitron.data.datasource.info.media.movieInfo.MovieInfo
 import com.example.anitron.data.datasource.State
-import com.example.anitron.data.datasource.tvshowInfo.TvShowInfo
+import com.example.anitron.data.datasource.info.media.tvshowInfo.TvShowInfo
 import com.example.anitron.data.repository.MovieInfoRepository
 import com.example.anitron.databinding.MovieInfoBinding
 import com.example.anitron.domain.service.RetrofitService
