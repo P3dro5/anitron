@@ -211,16 +211,19 @@ class HomeActivity : AppCompatActivity() {
                                             modifier = Modifier.padding(10.dp)
                                         )
                                         LazyRow {
-                                            itemsIndexed(content.value.productionTeam) { _, cast ->
+                                            itemsIndexed(content.value.productionTeam) { index, cast ->
                                                 Card(
-                                                    Modifier.width(110.dp).clickable {
-
-                                                    },
+                                                    modifier = Modifier.width(110.dp),
                                                     backgroundColor = Color.Transparent,
                                                     elevation = 1.dp,
                                                     content = {
+                                                                val context = LocalContext.current
                                                                 Column(
-                                                                    modifier = Modifier.height(200.dp),
+                                                                    modifier = Modifier.height(200.dp).clickable {
+                                                                        val intent = Intent(context, PersonInfoActivity::class.java)
+                                                                        intent.putExtra("id", content.value.productionTeam[index].id)
+                                                                        context.startActivity(intent)
+                                                                    },
                                                                     horizontalAlignment = Alignment.CenterHorizontally,
                                                                     content = {
                                                                         if(cast.personImgPath != null) {

@@ -1,4 +1,4 @@
-package com.example.anitron.data.datasource
+package com.example.anitron.data.datasource.tvshowInfo
 
 import com.google.gson.annotations.SerializedName
 
@@ -13,7 +13,7 @@ data class Crew (
     @SerializedName("popularity") var popularity : String?,
     @SerializedName("genre_ids") var genreIds : List<String>,
     @SerializedName("cast") var cast : List<String>,
-    @SerializedName("vote_average") var voteAverage : String,
-    @SerializedName("release_date") var releaseDate : String,
-    @SerializedName("credit_id") var creditId : List<String>,
+    @SerializedName("vote_average") var voteAverage : String?,
+    @SerializedName("release_date") var releaseDate : String?,
+    @SerializedName("credit_id") var creditId : String?,
 )
