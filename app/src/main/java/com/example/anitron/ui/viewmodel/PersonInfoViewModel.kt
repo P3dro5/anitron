@@ -3,11 +3,10 @@ package com.example.anitron.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.anitron.data.datasource.State
-import com.example.anitron.data.datasource.tvshowInfo.MediaAppearances
-import com.example.anitron.data.datasource.tvshowInfo.PersonInfo
+import com.example.anitron.data.datasource.info.personInfo.MediaAppearances
+import com.example.anitron.data.datasource.info.personInfo.PersonInfo
 import com.example.anitron.data.repository.PersonInfoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.launch
 
 class PersonInfoViewModel(private val repository: PersonInfoRepository) : ViewModel() {
