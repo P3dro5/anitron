@@ -1,8 +1,8 @@
-package com.example.anitron.data.datasource.tvshowInfo
+package com.example.anitron.data.datasource.info.media.tvshowInfo
 
-import com.example.anitron.data.datasource.movieInfo.Company
-import com.example.anitron.data.datasource.movieInfo.Genre
-import com.example.anitron.data.datasource.movieInfo.Language
+import com.example.anitron.data.datasource.info.media.movieInfo.Company
+import com.example.anitron.data.datasource.info.media.movieInfo.Genre
+import com.example.anitron.data.datasource.info.media.movieInfo.Language
 import com.google.gson.annotations.SerializedName
 
 data class TvShowInfo (
