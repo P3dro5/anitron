@@ -131,25 +131,27 @@ class HomeActivity : AppCompatActivity() {
                                             color = Color.White,
                                             modifier = Modifier.weight(1f)
                                         )
-                                        Icon(modifier = Modifier
-                                            .clickable {
-                                                val intent =
-                                                    Intent(
-                                                        context,
-                                                        ViewMoreActivity::class.java
+                                        if(content.value.movieSelection.size >= 20){
+                                            Icon(modifier = Modifier
+                                                .clickable {
+                                                    val intent =
+                                                        Intent(
+                                                            context,
+                                                            ViewMoreActivity::class.java
+                                                        )
+                                                    intent.putExtra(
+                                                        "category",
+                                                        CategoryEntry.SearchedMovies
                                                     )
-                                                intent.putExtra(
-                                                    "category",
-                                                    CategoryEntry.SearchedMovies
-                                                )
-                                                intent.putExtra("searchedQuery", searchedQuery)
-                                                intent.putExtra("isMovie", true)
-                                                context.startActivity(intent)
-                                            }
-                                            .weight(0.1f),
-                                            imageVector = Icons.Default.ArrowForward,
-                                            contentDescription = "Forward",
-                                            tint = Color.White)
+                                                    intent.putExtra("searchedQuery", searchedQuery)
+                                                    intent.putExtra("isMovie", true)
+                                                    context.startActivity(intent)
+                                                }
+                                                .weight(0.1f),
+                                                imageVector = Icons.Default.ArrowForward,
+                                                contentDescription = "Forward",
+                                                tint = Color.White)
+                                        }
                                     }
                                     Spacer(
                                         modifier = Modifier.padding(10.dp)
@@ -276,25 +278,27 @@ class HomeActivity : AppCompatActivity() {
                                                 color = Color.White,
                                                 modifier = Modifier.weight(1f)
                                             )
-                                            Icon(modifier = Modifier
-                                                .clickable {
-                                                    val intent =
-                                                        Intent(
-                                                            context,
-                                                            ViewMoreActivity::class.java
+                                            if(content.value.seriesSelection.size >= 20){
+                                                Icon(modifier = Modifier
+                                                    .clickable {
+                                                        val intent =
+                                                            Intent(
+                                                                context,
+                                                                ViewMoreActivity::class.java
+                                                            )
+                                                        intent.putExtra(
+                                                            "category",
+                                                            CategoryEntry.SearchedTvShows
                                                         )
-                                                    intent.putExtra(
-                                                        "category",
-                                                        CategoryEntry.SearchedTvShows
-                                                    )
-                                                    intent.putExtra("searchedQuery", searchedQuery)
-                                                    intent.putExtra("isMovie", false)
-                                                    context.startActivity(intent)
-                                                }
-                                                .weight(0.1f),
-                                                imageVector = Icons.Default.ArrowForward,
-                                                contentDescription = "Forward",
-                                                tint = Color.White)
+                                                        intent.putExtra("searchedQuery", searchedQuery)
+                                                        intent.putExtra("isMovie", false)
+                                                        context.startActivity(intent)
+                                                    }
+                                                    .weight(0.1f),
+                                                    imageVector = Icons.Default.ArrowForward,
+                                                    contentDescription = "Forward",
+                                                    tint = Color.White)
+                                            }
                                         }
                                         Spacer(
                                             modifier = Modifier.padding(10.dp)
