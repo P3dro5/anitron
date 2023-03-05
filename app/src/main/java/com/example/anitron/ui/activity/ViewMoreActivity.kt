@@ -151,7 +151,7 @@ class ViewMoreActivity : AppCompatActivity() {
                                     items(entries.value.movies.size) { index ->
                                         val context = LocalContext.current
                                         Row(
-                                            modifier = Modifier.height(200.dp)
+                                            modifier = Modifier.height(150.dp)
                                                 .clickable {
                                                     val intent =
                                                         Intent(context, InfoActivity::class.java)
@@ -166,14 +166,13 @@ class ViewMoreActivity : AppCompatActivity() {
                                                         if (entries.value.movies[index].poster != null) {
                                                             AsyncImage(
                                                                 contentScale = ContentScale.FillBounds,
-                                                                modifier = Modifier
-                                                                    .fillMaxSize(),
+                                                                modifier = Modifier.height(150.dp).fillMaxWidth(),
                                                                 alignment = Alignment.Center,
                                                                 model = "https://image.tmdb.org/t/p/w500" + entries.value.movies[index].poster,
                                                                 contentDescription = stringResource(R.string.app_name)
                                                             )
                                                         }
-                                                        else Image(modifier = Modifier.fillMaxSize(), contentScale = ContentScale.FillWidth, alignment = Alignment.Center, painter = painterResource(R.drawable.ic_baseline_question_mark_24),contentDescription = "")
+                                                        else Image(modifier = Modifier.height(150.dp), contentScale = ContentScale.FillWidth, alignment = Alignment.Center, painter = painterResource(R.drawable.ic_baseline_question_mark_24),contentDescription = "")
                                                     }
                                                 )
                                             }
