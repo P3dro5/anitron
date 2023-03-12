@@ -15,12 +15,15 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
@@ -159,13 +162,21 @@ class HomeActivity : AppCompatActivity() {
                                             Card(
                                                 elevation = 4.dp,
                                                 backgroundColor = Color.Transparent,
-                                                modifier = Modifier.height(150.dp).clickable {
-                                                    val intent =
-                                                        Intent(context, InfoActivity::class.java)
-                                                    intent.putExtra("id", content.value.movieSelection[index].id)
-                                                    intent.putExtra("isMovie", true)
-                                                    context.startActivity(intent)
-                                                },
+                                                modifier = Modifier
+                                                    .height(150.dp)
+                                                    .clickable {
+                                                        val intent =
+                                                            Intent(
+                                                                context,
+                                                                InfoActivity::class.java
+                                                            )
+                                                        intent.putExtra(
+                                                            "id",
+                                                            content.value.movieSelection[index].id
+                                                        )
+                                                        intent.putExtra("isMovie", true)
+                                                        context.startActivity(intent)
+                                                    },
                                                 content = {
                                                     Row(
                                                         modifier = Modifier.fillMaxSize(),
@@ -213,9 +224,11 @@ class HomeActivity : AppCompatActivity() {
                                         LazyRow {
                                             itemsIndexed(content.value.productionTeam) { _, cast ->
                                                 Card(
-                                                    Modifier.width(110.dp).clickable {
+                                                    Modifier
+                                                        .width(110.dp)
+                                                        .clickable {
 
-                                                    },
+                                                        },
                                                     backgroundColor = Color.Transparent,
                                                     elevation = 1.dp,
                                                     content = {
@@ -225,7 +238,9 @@ class HomeActivity : AppCompatActivity() {
                                                                     content = {
                                                                         if(cast.personImgPath != null) {
                                                                             AsyncImage(
-                                                                                modifier = Modifier.height(160.dp).fillMaxWidth(),
+                                                                                modifier = Modifier
+                                                                                    .height(160.dp)
+                                                                                    .fillMaxWidth(),
                                                                                 contentScale = ContentScale.FillBounds,
                                                                                 alignment = Alignment.TopCenter,
                                                                                 model = "https://image.tmdb.org/t/p/w300" + cast.personImgPath,
@@ -305,13 +320,21 @@ class HomeActivity : AppCompatActivity() {
                                                     Card(
                                                         elevation = 4.dp,
                                                         backgroundColor = Color.Transparent,
-                                                        modifier = Modifier.height(150.dp).clickable {
-                                                        val intent =
-                                                            Intent(context, InfoActivity::class.java)
-                                                        intent.putExtra("id", content.value.seriesSelection[index].id)
-                                                        intent.putExtra("isMovie", false)
-                                                        context.startActivity(intent)
-                                                    },
+                                                        modifier = Modifier
+                                                            .height(150.dp)
+                                                            .clickable {
+                                                                val intent =
+                                                                    Intent(
+                                                                        context,
+                                                                        InfoActivity::class.java
+                                                                    )
+                                                                intent.putExtra(
+                                                                    "id",
+                                                                    content.value.seriesSelection[index].id
+                                                                )
+                                                                intent.putExtra("isMovie", false)
+                                                                context.startActivity(intent)
+                                                            },
                                                         content = {
                                                             Row(
                                                                 modifier = Modifier.fillMaxSize(),
@@ -761,8 +784,9 @@ class HomeActivity : AppCompatActivity() {
     fun DefaultAppBar(
         onSearchClicked: () -> Unit,
     ) {
-
+        Column{
         TopAppBar(
+            elevation = 4.dp,
             backgroundColor = Color(resources.getColor(R.color.dark_blue_grey)),
 
             title = {
@@ -772,19 +796,36 @@ class HomeActivity : AppCompatActivity() {
                 )
             },
             actions = {
-                IconButton(
-                    onClick = {
-                        onSearchClicked()
+                    IconButton(
+                        modifier = Modifier,
+                        onClick = {
+                            onSearchClicked()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = "Search Icon",
+                            tint = Color.White
+                        )
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = "Search Icon",
-                        tint = Color.White
-                    )
-                }
+                    Spacer(Modifier.padding(5.dp))
+                    IconButton(
+                        modifier = Modifier.size(25.dp),
+                        onClick = {
+
+                        }
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.ic_menu),
+                            contentDescription = "More",
+                            colorFilter = ColorFilter.tint(Color.White),
+                            contentScale = ContentScale.FillHeight
+                        )
+                    }
+                    Spacer(Modifier.padding(8.dp))
             }
         )
+        }
     }
 
     @Composable
