@@ -836,11 +836,10 @@ class HomeActivity : AppCompatActivity() {
 
                         }
                     ) {
-                        Image(
-                            painter = painterResource(R.drawable.ic_menu),
-                            contentDescription = "More",
-                            colorFilter = ColorFilter.tint(Color.White),
-                            contentScale = ContentScale.FillHeight
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Search Icon",
+                            tint = Color.White
                         )
                     }
                     Spacer(Modifier.padding(8.dp))
