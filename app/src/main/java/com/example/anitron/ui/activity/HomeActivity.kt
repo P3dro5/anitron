@@ -13,10 +13,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +21,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
@@ -47,6 +45,7 @@ import com.example.anitron.domain.service.RetrofitService
 import com.example.anitron.ui.modelfactory.HomeViewModelFactory
 import com.example.anitron.ui.theme.fonts
 import com.example.anitron.ui.viewmodel.HomeViewModel
+import com.google.android.material.bottomappbar.BottomAppBar
 
 
 class HomeActivity : AppCompatActivity() {
@@ -75,6 +74,7 @@ class HomeActivity : AppCompatActivity() {
 
         findViewById<ComposeView>(binding.homeViewDisplay.id)
             .setContent {
+                val selectedBottomBarItem by remember { mutableStateOf(0) }
                 Scaffold(
                     backgroundColor= Color(resources.getColor(R.color.dark_blue_grey)),
                     topBar = {
@@ -99,6 +99,27 @@ class HomeActivity : AppCompatActivity() {
                         ) {
                             viewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
                         }
+                    },
+                    bottomBar = {
+                        var items =
+                            listOf(
+                                BottomBarItem("Home", Icons.Default.Home), BottomBarItem("Profile", Icons.Default.Person), BottomBarItem("About", Icons.Default.Info)
+                            )
+                                BottomNavigation(
+                                    backgroundColor= Color(resources.getColor(R.color.dark_blue_grey))
+                                ) {
+                                    items.forEachIndexed {
+                                        index, item ->
+                                        BottomNavigationItem(
+                                            selectedContentColor = Color.White,
+                                            unselectedContentColor = Color.Gray,
+                                            icon = { Icon(imageVector = item.icon, contentDescription = null)},
+                                            selected = selectedBottomBarItem == index,
+                                            label = { Text(text = item.tag) },
+                                            onClick = { }
+                                        )
+                                    }
+                                }
                     },
                     modifier = Modifier.fillMaxSize(),
 
@@ -939,6 +960,8 @@ class HomeActivity : AppCompatActivity() {
             )
         }
     }
+
+    data class BottomBarItem (val tag: String, val icon: ImageVector)
 }
 
 
