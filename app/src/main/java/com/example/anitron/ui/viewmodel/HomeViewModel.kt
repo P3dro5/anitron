@@ -28,6 +28,10 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
         mutableStateOf(value = "")
     val searchTextState: NormalState<String> = _searchTextState
 
+    private val _bottomNavigationState:  MutableState<BottomNavigationState> =
+        mutableStateOf(value = BottomNavigationState.Home)
+    var bottomNavigationState: NormalState<BottomNavigationState> = _bottomNavigationState
+
     fun updateSearchWidgetState(newValue: SearchWidgetState) {
         _searchWidgetState.value = newValue
     }
@@ -126,6 +130,12 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
         }
       }
     }
+
+    fun bottomNavigationScreenChange(screenState: BottomNavigationState){
+        _bottomNavigationState.value = screenState
+    }
 }
 
 data class Result(val state: State, val movieSelection: List<Movie>, val seriesSelection: List<Movie>, val productionTeam: List<SearchedPerson>, val upcomingMoviesSelection: List<Movie>, val upcomingSeriesSelection: List<Movie>, val onTheatres: List<Movie>)
+
+data class Screen(val screenState: State)
