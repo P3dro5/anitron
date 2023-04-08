@@ -1,4 +1,4 @@
-package com.example.anitron.data.datasource.movieInfo
+package com.example.anitron.data.datasource.info.media.movieInfo
 
 import com.google.gson.annotations.SerializedName
 

@@ -47,11 +47,11 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
     fun getHomeScreenMoviesAndSeries() {
         viewModelScope.launch{
             try{
-                var popularMoviesResponses = repository.getPopMovies("1")
-                var popularSeriesResponses = repository.getPopSeries("1")
-                var upcomingMoviesResponses = repository.getUpcMovies("1")
-                var upcomingSeriesResponses = repository.getOnAir("1")
-                var onTheatres = repository.getOnTheatres("1")
+                val popularMoviesResponses = repository.getPopMovies("1")
+                val popularSeriesResponses = repository.getPopSeries("1")
+                val upcomingMoviesResponses = repository.getUpcMovies("1")
+                val upcomingSeriesResponses = repository.getOnAir("1")
+                val onTheatres = repository.getOnTheatres("1")
 
 
                 if(popularMoviesResponses.isSuccessful && popularMoviesResponses.body() != null && popularSeriesResponses.isSuccessful && popularSeriesResponses.body() != null){

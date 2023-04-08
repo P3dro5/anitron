@@ -1,10 +1,12 @@
 package com.example.anitron.domain.service
 import com.example.anitron.data.datasource.MovieList
 import com.example.anitron.BuildConfig
-import com.example.anitron.data.datasource.People
 import com.example.anitron.data.datasource.PersonDetails
-import com.example.anitron.data.datasource.movieInfo.MovieInfo
-import com.example.anitron.data.datasource.tvshowInfo.TvShowInfo
+import com.example.anitron.data.datasource.info.media.Credits
+import com.example.anitron.data.datasource.info.media.movieInfo.MovieInfo
+import com.example.anitron.data.datasource.info.personInfo.MediaAppearances
+import com.example.anitron.data.datasource.info.personInfo.PersonInfo
+import com.example.anitron.data.datasource.info.media.tvshowInfo.TvShowInfo
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -44,6 +46,21 @@ interface RetrofitService {
 
     @GET("3/search/person?language=en-US")
     suspend fun getSearchPeople(@Query("page") page : String, @Query("query") searchQuery : String): Response<PersonDetails>
+
+    @GET("3/person/{person_id}/movie_credits?language=en-US")
+    suspend fun getMoviePersonCredits(@Path("person_id") id : String): Response<MediaAppearances>
+
+    @GET("3/person/{person_id}/tv_credits?language=en-US")
+    suspend fun getTvPersonCredits(@Path("person_id") id : String): Response<MediaAppearances>
+
+    @GET("3/person/{person_id}?language=en-US")
+    suspend fun getPersonDetail(@Path("person_id") id : String): Response<PersonInfo>
+
+    @GET("3/movie/{movie_id}/credits?language=en-US")
+    suspend fun getMovieCastCredits(@Path("movie_id") id : String): Response<Credits>
+
+    @GET("3/tv/{tv_id}/credits?language=en-US")
+    suspend fun getTvShowCastCredits(@Path("tv_id") id : String): Response<Credits>
 
     companion object {
 

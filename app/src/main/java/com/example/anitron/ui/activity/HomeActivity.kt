@@ -291,10 +291,14 @@ class HomeActivity : AppCompatActivity() {
                                                             elevation = 1.dp,
                                                             content = {
                                                                 Column(
-                                                                    modifier = Modifier.height(200.dp),
+                                                                    modifier = Modifier.height(200.dp).clickable {
+                                                                        val intent = Intent(context, PersonInfoActivity::class.java)
+                                                                        intent.putExtra("id", content.value.productionTeam[index].id)
+                                                                        context.startActivity(intent)
+                                                                    },
                                                                     horizontalAlignment = Alignment.CenterHorizontally,
                                                                     content = {
-                                                                        if (cast.personImgPath != null) {
+                                                                        if(cast.personImgPath != null) {
                                                                             AsyncImage(
                                                                                 modifier = Modifier
                                                                                     .height(160.dp)
