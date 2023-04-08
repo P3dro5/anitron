@@ -76,29 +76,35 @@ class HomeActivity : AppCompatActivity() {
         findViewById<ComposeView>(binding.homeViewDisplay.id)
             .setContent {
                 var selectedBottomBarItem by remember { mutableStateOf(0) }
+                val bottomNavigationState by viewModel.bottomNavigationState
                 Scaffold(
                     backgroundColor = Color(resources.getColor(R.color.dark_blue_grey)),
                     topBar = {
                         val searchWidgetState by viewModel.searchWidgetState
                         val searchTextState by viewModel.searchTextState
-                        MainAppBar(
-                            searchWidgetState = searchWidgetState,
-                            productViewModel = viewModel,
-                            searchTextState = searchTextState,
+                        when(bottomNavigationState) {
+                            BottomNavigationState.Home -> {
+                                MainAppBar(
+                                    searchWidgetState = searchWidgetState,
+                                    productViewModel = viewModel,
+                                    searchTextState = searchTextState,
 
-                            onTextChange = {
-                                viewModel.updateSearchTextState(newValue = it)
-                                viewModel.getSearchMovies(searchText = it)
-                            },
-                            onCloseClicked = {
-                                viewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
-                                viewModel.getHomeScreenMoviesAndSeries()
-                            },
-                            onSearchClicked = {
-                                viewModel.getSearchMovies(searchText = it)
-                            },
-                        ) {
-                            viewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
+                                    onTextChange = {
+                                        viewModel.updateSearchTextState(newValue = it)
+                                        viewModel.getSearchMovies(searchText = it)
+                                    },
+                                    onCloseClicked = {
+                                        viewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
+                                        viewModel.getHomeScreenMoviesAndSeries()
+                                    },
+                                    onSearchClicked = {
+                                        viewModel.getSearchMovies(searchText = it)
+                                    },
+                                ) {
+                                    viewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
+                                }
+                            }
+                            else -> {}
                         }
                     },
                     bottomBar = {
@@ -139,7 +145,6 @@ class HomeActivity : AppCompatActivity() {
                             initialCall = false
                         }
                         val content = viewModel.movieList.collectAsState()
-                        val bottomNavigationState by viewModel.bottomNavigationState
 
                         when(bottomNavigationState) {
                             BottomNavigationState.Profile -> {}
@@ -865,6 +870,7 @@ class HomeActivity : AppCompatActivity() {
                                                 }
                                             }
                                         }
+                                    else -> {}
                                 }
                             }
                         }
