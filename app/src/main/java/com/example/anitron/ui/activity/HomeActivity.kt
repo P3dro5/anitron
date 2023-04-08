@@ -13,14 +13,15 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import coil.compose.AsyncImage
 import com.example.anitron.R
+import com.example.anitron.data.datasource.BottomNavigationState
 import com.example.anitron.data.datasource.CategoryEntry
 import com.example.anitron.data.datasource.SearchWidgetState
 import com.example.anitron.data.datasource.State
@@ -44,6 +46,7 @@ import com.example.anitron.domain.service.RetrofitService
 import com.example.anitron.ui.modelfactory.HomeViewModelFactory
 import com.example.anitron.ui.theme.fonts
 import com.example.anitron.ui.viewmodel.HomeViewModel
+import com.google.android.material.bottomappbar.BottomAppBar
 
 
 class HomeActivity : AppCompatActivity() {
@@ -72,173 +75,240 @@ class HomeActivity : AppCompatActivity() {
 
         findViewById<ComposeView>(binding.homeViewDisplay.id)
             .setContent {
+                var selectedBottomBarItem by remember { mutableStateOf(0) }
+                val bottomNavigationState by viewModel.bottomNavigationState
                 Scaffold(
-                    backgroundColor= Color(resources.getColor(R.color.dark_blue_grey)),
+                    backgroundColor = Color(resources.getColor(R.color.dark_blue_grey)),
                     topBar = {
                         val searchWidgetState by viewModel.searchWidgetState
                         val searchTextState by viewModel.searchTextState
-                        MainAppBar(
-                            searchWidgetState = searchWidgetState,
-                            productViewModel = viewModel,
-                            searchTextState = searchTextState,
+                        when(bottomNavigationState) {
+                            BottomNavigationState.Home -> {
+                                MainAppBar(
+                                    searchWidgetState = searchWidgetState,
+                                    productViewModel = viewModel,
+                                    searchTextState = searchTextState,
 
-                            onTextChange = {
-                                viewModel.updateSearchTextState(newValue = it)
-                                viewModel.getSearchMovies(searchText = it)
-                            },
-                            onCloseClicked = {
-                                viewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
-                                viewModel.getHomeScreenMoviesAndSeries()
-                            },
-                            onSearchClicked = {
-                                viewModel.getSearchMovies(searchText = it)
-                            },
+                                    onTextChange = {
+                                        viewModel.updateSearchTextState(newValue = it)
+                                        viewModel.getSearchMovies(searchText = it)
+                                    },
+                                    onCloseClicked = {
+                                        viewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
+                                        viewModel.getHomeScreenMoviesAndSeries()
+                                    },
+                                    onSearchClicked = {
+                                        viewModel.getSearchMovies(searchText = it)
+                                    },
+                                ) {
+                                    viewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
+                                }
+                            }
+                            else -> {}
+                        }
+                    },
+                    bottomBar = {
+                        val items =
+                            listOf(
+                                BottomBarItem("Home", Icons.Default.Home),
+                                BottomBarItem("Profile", Icons.Default.Person),
+                                BottomBarItem("About", Icons.Default.Info)
+                            )
+                        BottomNavigation(
+                            backgroundColor = Color(resources.getColor(R.color.dark_blue_grey))
                         ) {
-                            viewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
+                            items.forEachIndexed { index, item ->
+                                BottomNavigationItem(
+                                    selectedContentColor = Color.White,
+                                    unselectedContentColor = Color.Gray,
+                                    icon = {
+                                        Icon(
+                                            imageVector = item.icon,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    selected = selectedBottomBarItem == index,
+                                    label = { Text(text = item.tag) },
+                                    onClick = {
+                                        selectedBottomBarItem = index
+                                        viewModel.bottomNavigationScreenChange(BottomNavigationState.valueOf(item.tag))
+                                    }
+                                )
+                            }
                         }
                     },
                     modifier = Modifier.fillMaxSize(),
 
                     content = { padding ->
-                        if(initialCall) {
+                        if (initialCall) {
                             viewModel.getHomeScreenMoviesAndSeries()
                             initialCall = false
                         }
                         val content = viewModel.movieList.collectAsState()
 
-                        when (content.value.state) {
-                            State.Loading -> {}
-                            State.Searched -> {
-                                Column(
-                                    modifier = Modifier
-                                        .verticalScroll(rememberScrollState())
-                                        .fillMaxSize()
-                                        .padding(padding),
-                                ) {
-                                    val context = LocalContext.current
-                                    if(content.value.seriesSelection.isNotEmpty()) {
-                                    Row(
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Spacer(
-                                            modifier = Modifier.padding(10.dp)
-                                        )
-                                        Text(
-                                            "Movies",
-                                            fontFamily = fonts,
-                                            fontWeight = FontWeight.ExtraBold,
-                                            fontSize = 20.sp,
-                                            color = Color.White,
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                        if(content.value.movieSelection.size >= 20){
-                                            Icon(modifier = Modifier
-                                                .clickable {
-                                                    val intent =
-                                                        Intent(
-                                                            context,
-                                                            ViewMoreActivity::class.java
-                                                        )
-                                                    intent.putExtra(
-                                                        "category",
-                                                        CategoryEntry.SearchedMovies
-                                                    )
-                                                    intent.putExtra("searchedQuery", searchedQuery)
-                                                    intent.putExtra("isMovie", true)
-                                                    context.startActivity(intent)
-                                                }
-                                                .weight(0.1f),
-                                                imageVector = Icons.Default.ArrowForward,
-                                                contentDescription = "Forward",
-                                                tint = Color.White)
-                                        }
-                                    }
-                                    Spacer(
-                                        modifier = Modifier.padding(10.dp)
-                                    )
-                                    LazyVerticalGrid(modifier = Modifier.heightIn(max= 800.dp), columns = GridCells.Fixed(4), userScrollEnabled = false, content = {
-                                        items(content.value.movieSelection.size) { index ->
-                                            Card(
-                                                elevation = 4.dp,
-                                                backgroundColor = Color.Transparent,
-                                                modifier = Modifier.height(150.dp).clickable {
-                                                    val intent =
-                                                        Intent(context, InfoActivity::class.java)
-                                                    intent.putExtra("id", content.value.movieSelection[index].id)
-                                                    intent.putExtra("isMovie", true)
-                                                    context.startActivity(intent)
-                                                },
-                                                content = {
-                                                    Row(
-                                                        modifier = Modifier.fillMaxSize(),
-                                                        content = {
-                                                            if (content.value.movieSelection[index].poster != null) {
-                                                                AsyncImage(
-                                                                    contentScale = ContentScale.FillBounds,
-                                                                    modifier = Modifier
-                                                                        .fillMaxSize(),
-                                                                    alignment = Alignment.Center,
-                                                                    model = "https://image.tmdb.org/t/p/w300" + content.value.movieSelection[index].poster,
-                                                                    contentDescription = null
-                                                                )
-                                                            } else Image(modifier = Modifier.fillMaxSize(), alignment = Alignment.Center, painter = painterResource(R.drawable.ic_baseline_question_mark_24),contentDescription = "")
-                                                        }
-                                                    )
-                                                }
-                                            )
-                                        }
-                                    })
-                                    }
-                                    Spacer(
-                                        modifier = Modifier.padding(20.dp)
-                                    )
-                                    if(content.value.productionTeam.isNotEmpty()) {
-                                        Row(
-                                            horizontalArrangement = Arrangement.SpaceBetween
+                        when(bottomNavigationState) {
+                            BottomNavigationState.Profile -> {}
+                            BottomNavigationState.About -> {}
+                            BottomNavigationState.Home -> {
+                                when (content.value.state) {
+                                    State.Loading -> {}
+                                    State.Searched -> {
+                                        Column(
+                                            modifier = Modifier
+                                                .verticalScroll(rememberScrollState())
+                                                .fillMaxSize()
+                                                .padding(padding),
                                         ) {
-                                            Spacer(
-                                                modifier = Modifier.padding(10.dp)
-                                            )
-                                            Text(
-                                                "People",
-                                                fontFamily = fonts,
-                                                fontWeight = FontWeight.ExtraBold,
-                                                fontSize = 20.sp,
-                                                color = Color.White,
-                                                modifier = Modifier.weight(1f)
-                                            )
-                                            if(content.value.productionTeam.size >= 20){
-                                                Icon(modifier = Modifier
-                                                    .clickable {
-                                                        val intent =
-                                                            Intent(
-                                                                context,
-                                                                ViewMoreActivity::class.java
+                                            val context = LocalContext.current
+                                            if (content.value.seriesSelection.isNotEmpty()) {
+                                                Row(
+                                                    horizontalArrangement = Arrangement.SpaceBetween
+                                                ) {
+                                                    Spacer(
+                                                        modifier = Modifier.padding(10.dp)
+                                                    )
+                                                    Text(
+                                                        "Movies",
+                                                        fontFamily = fonts,
+                                                        fontWeight = FontWeight.ExtraBold,
+                                                        fontSize = 20.sp,
+                                                        color = Color.White,
+                                                        modifier = Modifier.weight(1f)
+                                                    )
+                                                    Icon(modifier = Modifier
+                                                        .clickable {
+                                                            val intent =
+                                                                Intent(
+                                                                    context,
+                                                                    ViewMoreActivity::class.java
+                                                                )
+                                                            intent.putExtra(
+                                                                "category",
+                                                                CategoryEntry.SearchedMovies
                                                             )
-                                                        intent.putExtra(
-                                                            "category",
-                                                            CategoryEntry.SearchedPeople
-                                                        )
-                                                        intent.putExtra("searchedQuery", searchedQuery)
-                                                        context.startActivity(intent)
-                                                    }
-                                                    .weight(0.1f),
-                                                    imageVector = Icons.Default.ArrowForward,
-                                                    contentDescription = "Forward",
-                                                    tint = Color.White)
-                                            }
-                                        }
-                                        Spacer(
-                                            modifier = Modifier.padding(10.dp)
-                                        )
-                                        LazyRow {
-                                            itemsIndexed(content.value.productionTeam) { index, cast ->
-                                                Card(
-                                                    modifier = Modifier.width(110.dp),
-                                                    backgroundColor = Color.Transparent,
-                                                    elevation = 1.dp,
+                                                            intent.putExtra(
+                                                                "searchedQuery",
+                                                                searchedQuery
+                                                            )
+                                                            intent.putExtra("isMovie", true)
+                                                            context.startActivity(intent)
+                                                        }
+                                                        .weight(0.1f),
+                                                        imageVector = Icons.Default.ArrowForward,
+                                                        contentDescription = "Forward",
+                                                        tint = Color.White)
+                                                }
+                                                Spacer(
+                                                    modifier = Modifier.padding(10.dp)
+                                                )
+                                                LazyVerticalGrid(
+                                                    modifier = Modifier.heightIn(max = 800.dp),
+                                                    columns = GridCells.Fixed(4),
+                                                    userScrollEnabled = false,
                                                     content = {
-                                                                val context = LocalContext.current
+                                                        items(content.value.movieSelection.size) { index ->
+                                                            Card(
+                                                                elevation = 4.dp,
+                                                                backgroundColor = Color.Transparent,
+                                                                modifier = Modifier
+                                                                    .height(150.dp)
+                                                                    .clickable {
+                                                                        val intent =
+                                                                            Intent(
+                                                                                context,
+                                                                                InfoActivity::class.java
+                                                                            )
+                                                                        intent.putExtra(
+                                                                            "id",
+                                                                            content.value.movieSelection[index].id
+                                                                        )
+                                                                        intent.putExtra(
+                                                                            "isMovie",
+                                                                            true
+                                                                        )
+                                                                        context.startActivity(intent)
+                                                                    },
+                                                                content = {
+                                                                    Row(
+                                                                        modifier = Modifier.fillMaxSize(),
+                                                                        content = {
+                                                                            if (content.value.movieSelection[index].poster != null) {
+                                                                                AsyncImage(
+                                                                                    contentScale = ContentScale.FillBounds,
+                                                                                    modifier = Modifier
+                                                                                        .fillMaxSize(),
+                                                                                    alignment = Alignment.Center,
+                                                                                    model = "https://image.tmdb.org/t/p/w300" + content.value.movieSelection[index].poster,
+                                                                                    contentDescription = null
+                                                                                )
+                                                                            } else Image(
+                                                                                modifier = Modifier.fillMaxSize(),
+                                                                                alignment = Alignment.Center,
+                                                                                painter = painterResource(
+                                                                                    R.drawable.ic_baseline_question_mark_24
+                                                                                ),
+                                                                                contentDescription = ""
+                                                                            )
+                                                                        }
+                                                                    )
+                                                                }
+                                                            )
+                                                        }
+                                                    })
+                                            }
+                                            Spacer(
+                                                modifier = Modifier.padding(20.dp)
+                                            )
+                                            if (content.value.productionTeam.isNotEmpty()) {
+                                                Row(
+                                                    horizontalArrangement = Arrangement.SpaceBetween
+                                                ) {
+                                                    Spacer(
+                                                        modifier = Modifier.padding(10.dp)
+                                                    )
+                                                    Text(
+                                                        "People",
+                                                        fontFamily = fonts,
+                                                        fontWeight = FontWeight.ExtraBold,
+                                                        fontSize = 20.sp,
+                                                        color = Color.White,
+                                                        modifier = Modifier.weight(1f)
+                                                    )
+                                                    if(content.value.productionTeam.size >= 20){
+                                                        Icon(modifier = Modifier
+                                                            .clickable {
+                                                                val intent =
+                                                                    Intent(
+                                                                        context,
+                                                                        ViewMoreActivity::class.java
+                                                                    )
+                                                                intent.putExtra(
+                                                                    "category",
+                                                                    CategoryEntry.SearchedPeople
+                                                                )
+                                                                intent.putExtra("searchedQuery", searchedQuery)
+                                                                context.startActivity(intent)
+                                                            }
+                                                            .weight(0.1f),
+                                                            imageVector = Icons.Default.ArrowForward,
+                                                            contentDescription = "Forward",
+                                                            tint = Color.White)
+                                                    }
+                                                }
+                                                Spacer(
+                                                    modifier = Modifier.padding(10.dp)
+                                                )
+                                                LazyRow {
+                                                    itemsIndexed(content.value.productionTeam) { index, cast ->
+                                                        Card(
+                                                            Modifier
+                                                                .width(110.dp)
+                                                                .clickable {
+
+                                                                },
+                                                            backgroundColor = Color.Transparent,
+                                                            elevation = 1.dp,
+                                                            content = {
                                                                 Column(
                                                                     modifier = Modifier.height(200.dp).clickable {
                                                                         val intent = Intent(context, PersonInfoActivity::class.java)
@@ -249,7 +319,9 @@ class HomeActivity : AppCompatActivity() {
                                                                     content = {
                                                                         if(cast.personImgPath != null) {
                                                                             AsyncImage(
-                                                                                modifier = Modifier.height(160.dp).fillMaxWidth(),
+                                                                                modifier = Modifier
+                                                                                    .height(160.dp)
+                                                                                    .fillMaxWidth(),
                                                                                 contentScale = ContentScale.FillBounds,
                                                                                 alignment = Alignment.TopCenter,
                                                                                 model = "https://image.tmdb.org/t/p/w300" + cast.personImgPath,
@@ -257,47 +329,161 @@ class HomeActivity : AppCompatActivity() {
                                                                                     R.string.app_name
                                                                                 )
                                                                             )
-                                                                        } else Image(modifier = Modifier.height(160.dp), alignment = Alignment.Center, painter = painterResource(R.drawable.ic_baseline_question_mark_24),contentDescription = "")
+                                                                        } else Image(
+                                                                            modifier = Modifier.height(
+                                                                                160.dp
+                                                                            ),
+                                                                            alignment = Alignment.Center,
+                                                                            painter = painterResource(
+                                                                                R.drawable.ic_baseline_question_mark_24
+                                                                            ),
+                                                                            contentDescription = ""
+                                                                        )
 
                                                                         Text(
-                                                                                modifier = Modifier.width(100.dp),
-                                                                                text = cast.name,
-                                                                                textAlign = TextAlign.Center,
-                                                                                fontFamily = fonts,
-                                                                                fontWeight = FontWeight.Normal,
-                                                                                fontSize = 15.sp,
-                                                                                color = Color.White,
-                                                                            )
+                                                                            modifier = Modifier.width(
+                                                                                100.dp
+                                                                            ),
+                                                                            text = cast.name,
+                                                                            textAlign = TextAlign.Center,
+                                                                            fontFamily = fonts,
+                                                                            fontWeight = FontWeight.Normal,
+                                                                            fontSize = 15.sp,
+                                                                            color = Color.White,
+                                                                        )
 
                                                                     }
+                                                                )
+                                                            }
                                                         )
                                                     }
+                                                }
+                                            }
+
+
+                                            Spacer(
+                                                modifier = Modifier.padding(20.dp)
+                                            )
+
+                                            if (content.value.seriesSelection.isNotEmpty()) {
+                                                Row(
+                                                    horizontalArrangement = Arrangement.SpaceBetween
+                                                ) {
+                                                    Spacer(
+                                                        modifier = Modifier.padding(10.dp)
+                                                    )
+                                                    Text(
+                                                        "Tv Shows",
+                                                        fontFamily = fonts,
+                                                        fontWeight = FontWeight.ExtraBold,
+                                                        fontSize = 20.sp,
+                                                        color = Color.White,
+                                                        modifier = Modifier.weight(1f)
+                                                    )
+                                                    Icon(modifier = Modifier
+                                                        .clickable {
+                                                            val intent =
+                                                                Intent(
+                                                                    context,
+                                                                    ViewMoreActivity::class.java
+                                                                )
+                                                            intent.putExtra(
+                                                                "category",
+                                                                CategoryEntry.SearchedTvShows
+                                                            )
+                                                            intent.putExtra(
+                                                                "searchedQuery",
+                                                                searchedQuery
+                                                            )
+                                                            intent.putExtra("isMovie", false)
+                                                            context.startActivity(intent)
+                                                        }
+                                                        .weight(0.1f),
+                                                        imageVector = Icons.Default.ArrowForward,
+                                                        contentDescription = "Forward",
+                                                        tint = Color.White)
+                                                }
+                                                Spacer(
+                                                    modifier = Modifier.padding(10.dp)
                                                 )
+                                                LazyVerticalGrid(
+                                                    modifier = Modifier.heightIn(max = 800.dp),
+                                                    columns = GridCells.Fixed(4),
+                                                    userScrollEnabled = false,
+                                                    content = {
+                                                        items(content.value.seriesSelection.size) { index ->
+                                                            Card(
+                                                                elevation = 4.dp,
+                                                                backgroundColor = Color.Transparent,
+                                                                modifier = Modifier
+                                                                    .height(150.dp)
+                                                                    .clickable {
+                                                                        val intent =
+                                                                            Intent(
+                                                                                context,
+                                                                                InfoActivity::class.java
+                                                                            )
+                                                                        intent.putExtra(
+                                                                            "id",
+                                                                            content.value.seriesSelection[index].id
+                                                                        )
+                                                                        intent.putExtra(
+                                                                            "isMovie",
+                                                                            false
+                                                                        )
+                                                                        context.startActivity(intent)
+                                                                    },
+                                                                content = {
+                                                                    Row(
+                                                                        modifier = Modifier.fillMaxSize(),
+                                                                        content = {
+                                                                            if (content.value.seriesSelection[index].poster != null) {
+                                                                                AsyncImage(
+                                                                                    contentScale = ContentScale.FillBounds,
+                                                                                    modifier = Modifier
+                                                                                        .fillMaxSize(),
+                                                                                    alignment = Alignment.Center,
+                                                                                    model = "https://image.tmdb.org/t/p/w300" + content.value.seriesSelection[index].poster,
+                                                                                    contentDescription = null
+                                                                                )
+                                                                            } else Image(
+                                                                                modifier = Modifier.fillMaxSize(),
+                                                                                alignment = Alignment.Center,
+                                                                                painter = painterResource(
+                                                                                    R.drawable.ic_baseline_question_mark_24
+                                                                                ),
+                                                                                contentDescription = ""
+                                                                            )
+                                                                        }
+                                                                    )
+                                                                }
+                                                            )
+                                                        }
+                                                    })
                                             }
                                         }
+
                                     }
-
-
-                                    Spacer(
-                                        modifier = Modifier.padding(20.dp)
-                                    )
-
-                                    if(content.value.seriesSelection.isNotEmpty()) {
-                                        Row(
-                                            horizontalArrangement = Arrangement.SpaceBetween
+                                    State.Success ->
+                                        Column(
+                                            modifier = Modifier
+                                                .verticalScroll(rememberScrollState())
+                                                .fillMaxSize()
+                                                .padding(padding),
                                         ) {
-                                            Spacer(
-                                                modifier = Modifier.padding(10.dp)
-                                            )
-                                            Text(
-                                                "Tv Shows",
-                                                fontFamily = fonts,
-                                                fontWeight = FontWeight.ExtraBold,
-                                                fontSize = 20.sp,
-                                                color = Color.White,
-                                                modifier = Modifier.weight(1f)
-                                            )
-                                            if(content.value.seriesSelection.size >= 20){
+                                            val context = LocalContext.current
+                                            Row(
+                                                modifier = Modifier.fillMaxHeight(),
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Text(
+                                                    "Popular Movies",
+                                                    fontFamily = fonts,
+                                                    fontWeight = FontWeight.ExtraBold,
+                                                    fontSize = 20.sp,
+                                                    color = Color.White,
+                                                    modifier = Modifier.weight(1f)
+                                                )
                                                 Icon(modifier = Modifier
                                                     .clickable {
                                                         val intent =
@@ -307,9 +493,92 @@ class HomeActivity : AppCompatActivity() {
                                                             )
                                                         intent.putExtra(
                                                             "category",
-                                                            CategoryEntry.SearchedTvShows
+                                                            CategoryEntry.PopularMovies
                                                         )
-                                                        intent.putExtra("searchedQuery", searchedQuery)
+                                                        intent.putExtra("isMovie", true)
+                                                        context.startActivity(intent)
+                                                    }
+                                                    .weight(0.1f),
+                                                    imageVector = Icons.Default.ArrowForward,
+                                                    contentDescription = "Forward",
+                                                    tint = Color.White)
+                                            }
+
+                                            Spacer(
+                                                modifier = Modifier.padding(10.dp)
+                                            )
+                                            LazyRow {
+                                                itemsIndexed(content.value.movieSelection) { _, movieSelected ->
+                                                    Card(
+                                                        elevation = 4.dp,
+                                                        backgroundColor = Color.Transparent,
+                                                        content = {
+                                                            val context = LocalContext.current
+                                                            Row(
+                                                                modifier = Modifier
+                                                                    .clickable {
+                                                                        val intent =
+                                                                            Intent(
+                                                                                context,
+                                                                                InfoActivity::class.java
+                                                                            )
+                                                                        intent.putExtra(
+                                                                            "id",
+                                                                            movieSelected.id
+                                                                        )
+                                                                        intent.putExtra(
+                                                                            "isMovie",
+                                                                            true
+                                                                        )
+                                                                        context.startActivity(intent)
+                                                                    }
+                                                                    .fillMaxWidth(), content = {
+                                                                    Row(
+                                                                        content = {
+                                                                            AsyncImage(
+                                                                                contentScale = ContentScale.FillBounds,
+                                                                                modifier = Modifier
+                                                                                    .fillMaxSize(),
+                                                                                alignment = Alignment.Center,
+                                                                                model = "https://image.tmdb.org/t/p/w300" + movieSelected.poster,
+                                                                                contentDescription = stringResource(
+                                                                                    R.string.app_name
+                                                                                )
+                                                                            )
+                                                                        }
+                                                                    )
+                                                                }
+                                                            )
+                                                        }
+                                                    )
+                                                }
+                                            }
+                                            Spacer(
+                                                modifier = Modifier.padding(15.dp)
+                                            )
+                                            Row(
+                                                modifier = Modifier.fillMaxHeight(),
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Text(
+                                                    "Popular Tv Shows",
+                                                    fontFamily = fonts,
+                                                    fontWeight = FontWeight.ExtraBold,
+                                                    fontSize = 20.sp,
+                                                    color = Color.White,
+                                                    modifier = Modifier.weight(1f)
+                                                )
+                                                Icon(modifier = Modifier
+                                                    .clickable {
+                                                        val intent =
+                                                            Intent(
+                                                                context,
+                                                                ViewMoreActivity::class.java
+                                                            )
+                                                        intent.putExtra(
+                                                            "category",
+                                                            CategoryEntry.PopularTvShows
+                                                        )
                                                         intent.putExtra("isMovie", false)
                                                         context.startActivity(intent)
                                                     }
@@ -318,465 +587,315 @@ class HomeActivity : AppCompatActivity() {
                                                     contentDescription = "Forward",
                                                     tint = Color.White)
                                             }
-                                        }
-                                        Spacer(
-                                            modifier = Modifier.padding(10.dp)
-                                        )
-                                        LazyVerticalGrid(
-                                            modifier = Modifier.heightIn(max= 800.dp),
-                                            columns = GridCells.Fixed(4),
-                                            userScrollEnabled = false,
-                                            content = {
-                                                items(content.value.seriesSelection.size) { index ->
+                                            Spacer(
+                                                modifier = Modifier.padding(10.dp)
+                                            )
+
+                                            LazyRow {
+                                                itemsIndexed(content.value.seriesSelection) { _, seriesSelected ->
                                                     Card(
                                                         elevation = 4.dp,
                                                         backgroundColor = Color.Transparent,
-                                                        modifier = Modifier.height(150.dp).clickable {
+                                                        content = {
+                                                            val context = LocalContext.current
+                                                            Row(
+                                                                modifier = Modifier
+                                                                    .clickable {
+                                                                        val intent =
+                                                                            Intent(
+                                                                                context,
+                                                                                InfoActivity::class.java
+                                                                            )
+                                                                        intent.putExtra(
+                                                                            "id",
+                                                                            seriesSelected.id
+                                                                        )
+                                                                        intent.putExtra(
+                                                                            "isMovie",
+                                                                            false
+                                                                        )
+                                                                        context.startActivity(intent)
+                                                                    }
+                                                                    .fillMaxWidth(), content = {
+                                                                    Row(
+                                                                        content = {
+                                                                            AsyncImage(
+                                                                                contentScale = ContentScale.FillBounds,
+                                                                                modifier = Modifier
+                                                                                    .fillMaxSize(),
+                                                                                alignment = Alignment.Center,
+                                                                                model = "https://image.tmdb.org/t/p/w300" + seriesSelected.poster,
+                                                                                contentDescription = stringResource(
+                                                                                    R.string.app_name
+                                                                                )
+                                                                            )
+                                                                        }
+                                                                    )
+                                                                }
+                                                            )
+                                                        }
+                                                    )
+                                                }
+                                            }
+
+                                            Spacer(
+                                                modifier = Modifier.padding(15.dp)
+                                            )
+                                            Row(
+                                                modifier = Modifier.fillMaxHeight(),
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Text(
+                                                    "Upcoming Movies",
+                                                    fontFamily = fonts,
+                                                    fontWeight = FontWeight.ExtraBold,
+                                                    fontSize = 20.sp,
+                                                    color = Color.White,
+                                                    modifier = Modifier.weight(1f)
+                                                )
+                                                Icon(modifier = Modifier
+                                                    .clickable {
                                                         val intent =
-                                                            Intent(context, InfoActivity::class.java)
-                                                        intent.putExtra("id", content.value.seriesSelection[index].id)
+                                                            Intent(
+                                                                context,
+                                                                ViewMoreActivity::class.java
+                                                            )
+                                                        intent.putExtra(
+                                                            "category",
+                                                            CategoryEntry.UpcomingMovies
+                                                        )
+                                                        intent.putExtra("isMovie", true)
+                                                        context.startActivity(intent)
+                                                    }
+                                                    .weight(0.1f),
+                                                    imageVector = Icons.Default.ArrowForward,
+                                                    contentDescription = "Forward",
+                                                    tint = Color.White)
+                                            }
+                                            Spacer(
+                                                modifier = Modifier.padding(10.dp)
+                                            )
+                                            LazyRow {
+                                                itemsIndexed(content.value.upcomingMoviesSelection) { _, movieSelected ->
+                                                    Card(
+                                                        elevation = 4.dp,
+                                                        backgroundColor = Color.Transparent,
+                                                        content = {
+                                                            val context = LocalContext.current
+                                                            Row(
+                                                                modifier = Modifier
+                                                                    .clickable {
+                                                                        val intent =
+                                                                            Intent(
+                                                                                context,
+                                                                                InfoActivity::class.java
+                                                                            )
+                                                                        intent.putExtra(
+                                                                            "id",
+                                                                            movieSelected.id
+                                                                        )
+                                                                        intent.putExtra(
+                                                                            "isMovie",
+                                                                            true
+                                                                        )
+                                                                        context.startActivity(intent)
+                                                                    }
+                                                                    .fillMaxWidth(), content = {
+                                                                    Row(
+                                                                        content = {
+                                                                            AsyncImage(
+                                                                                contentScale = ContentScale.FillBounds,
+                                                                                modifier = Modifier
+                                                                                    .fillMaxSize(),
+                                                                                alignment = Alignment.Center,
+                                                                                model = "https://image.tmdb.org/t/p/w300" + movieSelected.poster,
+                                                                                contentDescription = stringResource(
+                                                                                    R.string.app_name
+                                                                                )
+                                                                            )
+                                                                        }
+                                                                    )
+                                                                }
+                                                            )
+                                                        }
+                                                    )
+                                                }
+                                            }
+
+                                            Spacer(
+                                                modifier = Modifier.padding(15.dp)
+                                            )
+
+                                            Row(
+                                                modifier = Modifier.fillMaxHeight(),
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Text(
+                                                    "On Theatres",
+                                                    fontFamily = fonts,
+                                                    fontWeight = FontWeight.ExtraBold,
+                                                    fontSize = 20.sp,
+                                                    color = Color.White,
+                                                    modifier = Modifier.weight(1f)
+                                                )
+                                                Icon(modifier = Modifier
+                                                    .clickable {
+                                                        val intent =
+                                                            Intent(
+                                                                context,
+                                                                ViewMoreActivity::class.java
+                                                            )
+                                                        intent.putExtra(
+                                                            "category",
+                                                            CategoryEntry.OnTheatres
+                                                        )
+                                                        intent.putExtra("isMovie", true)
+                                                        context.startActivity(intent)
+                                                    }
+                                                    .weight(0.1f),
+                                                    imageVector = Icons.Default.ArrowForward,
+                                                    contentDescription = "Forward",
+                                                    tint = Color.White)
+                                            }
+                                            Spacer(
+                                                modifier = Modifier.padding(10.dp)
+                                            )
+
+                                            LazyRow {
+                                                itemsIndexed(content.value.onTheatres) { _, movieSelected ->
+                                                    Card(
+                                                        elevation = 4.dp,
+                                                        backgroundColor = Color.Transparent,
+                                                        content = {
+                                                            val context = LocalContext.current
+                                                            Row(
+                                                                modifier = Modifier
+                                                                    .clickable {
+                                                                        val intent =
+                                                                            Intent(
+                                                                                context,
+                                                                                InfoActivity::class.java
+                                                                            )
+                                                                        intent.putExtra(
+                                                                            "id",
+                                                                            movieSelected.id
+                                                                        )
+                                                                        intent.putExtra(
+                                                                            "isMovie",
+                                                                            true
+                                                                        )
+                                                                        context.startActivity(intent)
+                                                                    }
+                                                                    .fillMaxWidth(), content = {
+                                                                    Row(
+                                                                        content = {
+                                                                            AsyncImage(
+                                                                                contentScale = ContentScale.FillBounds,
+                                                                                modifier = Modifier
+                                                                                    .fillMaxSize(),
+                                                                                alignment = Alignment.Center,
+                                                                                model = "https://image.tmdb.org/t/p/w300" + movieSelected.poster,
+                                                                                contentDescription = stringResource(
+                                                                                    R.string.app_name
+                                                                                )
+                                                                            )
+                                                                        }
+                                                                    )
+                                                                }
+                                                            )
+                                                        }
+                                                    )
+                                                }
+                                            }
+
+                                            Spacer(
+                                                modifier = Modifier.padding(15.dp)
+                                            )
+                                            Row(
+                                                modifier = Modifier.fillMaxHeight(),
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Text(
+                                                    "Shows Currently Airing",
+                                                    fontFamily = fonts,
+                                                    fontWeight = FontWeight.ExtraBold,
+                                                    fontSize = 20.sp,
+                                                    color = Color.White,
+                                                    modifier = Modifier.weight(1f)
+                                                )
+                                                Icon(modifier = Modifier
+                                                    .clickable {
+                                                        val intent =
+                                                            Intent(
+                                                                context,
+                                                                ViewMoreActivity::class.java
+                                                            )
+                                                        intent.putExtra(
+                                                            "category",
+                                                            CategoryEntry.ShowsCurrentlyAiring
+                                                        )
                                                         intent.putExtra("isMovie", false)
                                                         context.startActivity(intent)
-                                                    },
+                                                    }
+                                                    .weight(0.1f),
+                                                    imageVector = Icons.Default.ArrowForward,
+                                                    contentDescription = "Forward",
+                                                    tint = Color.White)
+                                            }
+                                            Spacer(
+                                                modifier = Modifier.padding(10.dp)
+                                            )
+
+                                            LazyRow {
+                                                itemsIndexed(content.value.upcomingSeriesSelection) { _, seriesSelected ->
+                                                    Card(
+                                                        elevation = 4.dp,
+                                                        backgroundColor = Color.Transparent,
                                                         content = {
+                                                            val context = LocalContext.current
                                                             Row(
-                                                                modifier = Modifier.fillMaxSize(),
-                                                                content = {
-                                                                    if(content.value.seriesSelection[index].poster != null){
-                                                                    AsyncImage(
-                                                                        contentScale = ContentScale.FillBounds,
-                                                                        modifier = Modifier
-                                                                            .fillMaxSize(),
-                                                                        alignment = Alignment.Center,
-                                                                        model = "https://image.tmdb.org/t/p/w300" + content.value.seriesSelection[index].poster,
-                                                                        contentDescription = null
+                                                                modifier = Modifier
+                                                                    .clickable {
+                                                                        val intent =
+                                                                            Intent(
+                                                                                context,
+                                                                                InfoActivity::class.java
+                                                                            )
+                                                                        intent.putExtra(
+                                                                            "id",
+                                                                            seriesSelected.id
+                                                                        )
+                                                                        intent.putExtra(
+                                                                            "isMovie",
+                                                                            false
+                                                                        )
+                                                                        context.startActivity(intent)
+                                                                    }
+                                                                    .fillMaxWidth(), content = {
+                                                                    Row(
+                                                                        content = {
+                                                                            AsyncImage(
+                                                                                contentScale = ContentScale.FillBounds,
+                                                                                modifier = Modifier
+                                                                                    .fillMaxSize(),
+                                                                                alignment = Alignment.Center,
+                                                                                model = "https://image.tmdb.org/t/p/w300" + seriesSelected.poster,
+                                                                                contentDescription = stringResource(
+                                                                                    R.string.app_name
+                                                                                )
+                                                                            )
+                                                                        }
                                                                     )
-                                                                }
-                                                                else Image(modifier = Modifier.fillMaxSize(), alignment = Alignment.Center, painter = painterResource(R.drawable.ic_baseline_question_mark_24),contentDescription = "")
                                                                 }
                                                             )
                                                         }
                                                     )
                                                 }
-                                            })
-                                    }
+                                            }
+                                        }
+                                    else -> {}
                                 }
-
                             }
-                            State.Success ->
-                                Column(
-                                    modifier = Modifier
-                                        .verticalScroll(rememberScrollState())
-                                        .fillMaxSize()
-                                        .padding(padding),
-                                ) {
-                                    val context = LocalContext.current
-                                    Row(
-                                        modifier = Modifier.fillMaxHeight(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Text(
-                                            "Popular Movies",
-                                            fontFamily = fonts,
-                                            fontWeight = FontWeight.ExtraBold,
-                                            fontSize = 20.sp,
-                                            color = Color.White,
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                        Icon(modifier = Modifier
-                                            .clickable {
-                                                val intent =
-                                                    Intent(
-                                                        context,
-                                                        ViewMoreActivity::class.java
-                                                    )
-                                                intent.putExtra(
-                                                    "category",
-                                                    CategoryEntry.PopularMovies
-                                                )
-                                                intent.putExtra("isMovie", true)
-                                                context.startActivity(intent)
-                                            }
-                                            .weight(0.1f),
-                                            imageVector = Icons.Default.ArrowForward,
-                                            contentDescription = "Forward",
-                                            tint = Color.White)
-                                    }
-
-                                    Spacer(
-                                        modifier = Modifier.padding(10.dp)
-                                    )
-                                    LazyRow {
-                                        itemsIndexed(content.value.movieSelection) { _, movieSelected ->
-                                            Card(
-                                                elevation = 4.dp,
-                                                backgroundColor = Color.Transparent,
-                                                content = {
-                                                    val context = LocalContext.current
-                                                    Row(
-                                                        modifier = Modifier
-                                                            .clickable {
-                                                                val intent =
-                                                                    Intent(
-                                                                        context,
-                                                                        InfoActivity::class.java
-                                                                    )
-                                                                intent.putExtra(
-                                                                    "id",
-                                                                    movieSelected.id
-                                                                )
-                                                                intent.putExtra("isMovie", true)
-                                                                context.startActivity(intent)
-                                                            }
-                                                            .fillMaxWidth(), content = {
-                                                            Row(
-                                                                content = {
-                                                                    AsyncImage(
-                                                                        contentScale = ContentScale.FillBounds,
-                                                                        modifier = Modifier
-                                                                            .fillMaxSize(),
-                                                                        alignment = Alignment.Center,
-                                                                        model = "https://image.tmdb.org/t/p/w300" + movieSelected.poster,
-                                                                        contentDescription = stringResource(
-                                                                            R.string.app_name
-                                                                        )
-                                                                    )
-                                                                }
-                                                            )
-                                                        }
-                                                    )
-                                                }
-                                            )
-                                        }
-                                    }
-                                    Spacer(
-                                        modifier = Modifier.padding(15.dp)
-                                    )
-                                    Row(
-                                        modifier = Modifier.fillMaxHeight(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Text(
-                                            "Popular Tv Shows",
-                                            fontFamily = fonts,
-                                            fontWeight = FontWeight.ExtraBold,
-                                            fontSize = 20.sp,
-                                            color = Color.White,
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                        Icon(modifier = Modifier
-                                            .clickable {
-                                                val intent =
-                                                    Intent(
-                                                        context,
-                                                        ViewMoreActivity::class.java
-                                                    )
-                                                intent.putExtra(
-                                                    "category",
-                                                    CategoryEntry.PopularTvShows
-                                                )
-                                                intent.putExtra("isMovie", false)
-                                                context.startActivity(intent)
-                                            }
-                                            .weight(0.1f),
-                                            imageVector = Icons.Default.ArrowForward,
-                                            contentDescription = "Forward",
-                                            tint = Color.White)
-                                    }
-                                    Spacer(
-                                        modifier = Modifier.padding(10.dp)
-                                    )
-
-                                    LazyRow {
-                                        itemsIndexed(content.value.seriesSelection) { _, seriesSelected ->
-                                            Card(
-                                                elevation = 4.dp,
-                                                backgroundColor = Color.Transparent,
-                                                content = {
-                                                    val context = LocalContext.current
-                                                    Row(
-                                                        modifier = Modifier
-                                                            .clickable {
-                                                                val intent =
-                                                                    Intent(
-                                                                        context,
-                                                                        InfoActivity::class.java
-                                                                    )
-                                                                intent.putExtra(
-                                                                    "id",
-                                                                    seriesSelected.id
-                                                                )
-                                                                intent.putExtra("isMovie", false)
-                                                                context.startActivity(intent)
-                                                            }
-                                                            .fillMaxWidth(), content = {
-                                                            Row(
-                                                                content = {
-                                                                    AsyncImage(
-                                                                        contentScale = ContentScale.FillBounds,
-                                                                        modifier = Modifier
-                                                                            .fillMaxSize(),
-                                                                        alignment = Alignment.Center,
-                                                                        model = "https://image.tmdb.org/t/p/w300" + seriesSelected.poster,
-                                                                        contentDescription = stringResource(
-                                                                            R.string.app_name
-                                                                        )
-                                                                    )
-                                                                }
-                                                            )
-                                                        }
-                                                    )
-                                                }
-                                            )
-                                        }
-                                    }
-
-                                    Spacer(
-                                        modifier = Modifier.padding(15.dp)
-                                    )
-                                    Row(
-                                        modifier = Modifier.fillMaxHeight(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Text(
-                                            "Upcoming Movies",
-                                            fontFamily = fonts,
-                                            fontWeight = FontWeight.ExtraBold,
-                                            fontSize = 20.sp,
-                                            color = Color.White,
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                        Icon(modifier = Modifier
-                                            .clickable {
-                                                val intent =
-                                                    Intent(
-                                                        context,
-                                                        ViewMoreActivity::class.java
-                                                    )
-                                                intent.putExtra(
-                                                    "category",
-                                                    CategoryEntry.UpcomingMovies
-                                                )
-                                                intent.putExtra("isMovie", true)
-                                                context.startActivity(intent)
-                                            }
-                                            .weight(0.1f),
-                                            imageVector = Icons.Default.ArrowForward,
-                                            contentDescription = "Forward",
-                                            tint = Color.White)
-                                    }
-                                    Spacer(
-                                        modifier = Modifier.padding(10.dp)
-                                    )
-                                    LazyRow {
-                                        itemsIndexed(content.value.upcomingMoviesSelection) { _, movieSelected ->
-                                            Card(
-                                                elevation = 4.dp,
-                                                backgroundColor = Color.Transparent,
-                                                content = {
-                                                    val context = LocalContext.current
-                                                    Row(
-                                                        modifier = Modifier
-                                                            .clickable {
-                                                                val intent =
-                                                                    Intent(
-                                                                        context,
-                                                                        InfoActivity::class.java
-                                                                    )
-                                                                intent.putExtra(
-                                                                    "id",
-                                                                    movieSelected.id
-                                                                )
-                                                                intent.putExtra("isMovie", true)
-                                                                context.startActivity(intent)
-                                                            }
-                                                            .fillMaxWidth(), content = {
-                                                            Row(
-                                                                content = {
-                                                                    AsyncImage(
-                                                                        contentScale = ContentScale.FillBounds,
-                                                                        modifier = Modifier
-                                                                            .fillMaxSize(),
-                                                                        alignment = Alignment.Center,
-                                                                        model = "https://image.tmdb.org/t/p/w300" + movieSelected.poster,
-                                                                        contentDescription = stringResource(
-                                                                            R.string.app_name
-                                                                        )
-                                                                    )
-                                                                }
-                                                            )
-                                                        }
-                                                    )
-                                                }
-                                            )
-                                        }
-                                    }
-
-                                    Spacer(
-                                        modifier = Modifier.padding(15.dp)
-                                    )
-
-                                    Row(
-                                        modifier = Modifier.fillMaxHeight(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Text(
-                                            "On Theatres",
-                                            fontFamily = fonts,
-                                            fontWeight = FontWeight.ExtraBold,
-                                            fontSize = 20.sp,
-                                            color = Color.White,
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                        Icon(modifier = Modifier
-                                            .clickable {
-                                                val intent =
-                                                    Intent(
-                                                        context,
-                                                        ViewMoreActivity::class.java
-                                                    )
-                                                intent.putExtra(
-                                                    "category",
-                                                    CategoryEntry.OnTheatres
-                                                )
-                                                intent.putExtra("isMovie", true)
-                                                context.startActivity(intent)
-                                            }
-                                            .weight(0.1f),
-                                            imageVector = Icons.Default.ArrowForward,
-                                            contentDescription = "Forward",
-                                            tint = Color.White)
-                                    }
-                                    Spacer(
-                                        modifier = Modifier.padding(10.dp)
-                                    )
-
-                                    LazyRow {
-                                        itemsIndexed(content.value.onTheatres) { _, movieSelected ->
-                                            Card(
-                                                elevation = 4.dp,
-                                                backgroundColor = Color.Transparent,
-                                                content = {
-                                                    val context = LocalContext.current
-                                                    Row(
-                                                        modifier = Modifier
-                                                            .clickable {
-                                                                val intent =
-                                                                    Intent(
-                                                                        context,
-                                                                        InfoActivity::class.java
-                                                                    )
-                                                                intent.putExtra(
-                                                                    "id",
-                                                                    movieSelected.id
-                                                                )
-                                                                intent.putExtra("isMovie", true)
-                                                                context.startActivity(intent)
-                                                            }
-                                                            .fillMaxWidth(), content = {
-                                                            Row(
-                                                                content = {
-                                                                    AsyncImage(
-                                                                        contentScale = ContentScale.FillBounds,
-                                                                        modifier = Modifier
-                                                                            .fillMaxSize(),
-                                                                        alignment = Alignment.Center,
-                                                                        model = "https://image.tmdb.org/t/p/w300" + movieSelected.poster,
-                                                                        contentDescription = stringResource(
-                                                                            R.string.app_name
-                                                                        )
-                                                                    )
-                                                                }
-                                                            )
-                                                        }
-                                                    )
-                                                }
-                                            )
-                                        }
-                                    }
-
-                                    Spacer(
-                                        modifier = Modifier.padding(15.dp)
-                                    )
-                                    Row(
-                                        modifier = Modifier.fillMaxHeight(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Text(
-                                            "Shows Currently Airing",
-                                            fontFamily = fonts,
-                                            fontWeight = FontWeight.ExtraBold,
-                                            fontSize = 20.sp,
-                                            color = Color.White,
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                        Icon(modifier = Modifier
-                                            .clickable {
-                                                val intent =
-                                                    Intent(
-                                                        context,
-                                                        ViewMoreActivity::class.java
-                                                    )
-                                                intent.putExtra(
-                                                    "category",
-                                                    CategoryEntry.ShowsCurrentlyAiring
-                                                )
-                                                intent.putExtra("isMovie", false)
-                                                context.startActivity(intent)
-                                            }
-                                            .weight(0.1f),
-                                            imageVector = Icons.Default.ArrowForward,
-                                            contentDescription = "Forward",
-                                            tint = Color.White)
-                                    }
-                                    Spacer(
-                                        modifier = Modifier.padding(10.dp)
-                                    )
-
-                                    LazyRow {
-                                        itemsIndexed(content.value.upcomingSeriesSelection) { _, seriesSelected ->
-                                            Card(
-                                                elevation = 4.dp,
-                                                backgroundColor = Color.Transparent,
-                                                content = {
-                                                    val context = LocalContext.current
-                                                    Row(
-                                                        modifier = Modifier
-                                                            .clickable {
-                                                                val intent =
-                                                                    Intent(
-                                                                        context,
-                                                                        InfoActivity::class.java
-                                                                    )
-                                                                intent.putExtra(
-                                                                    "id",
-                                                                    seriesSelected.id
-                                                                )
-                                                                intent.putExtra("isMovie", false)
-                                                                context.startActivity(intent)
-                                                            }
-                                                            .fillMaxWidth(), content = {
-                                                            Row(
-                                                                content = {
-                                                                    AsyncImage(
-                                                                        contentScale = ContentScale.FillBounds,
-                                                                        modifier = Modifier
-                                                                            .fillMaxSize(),
-                                                                        alignment = Alignment.Center,
-                                                                        model = "https://image.tmdb.org/t/p/w300" + seriesSelected.poster,
-                                                                        contentDescription = stringResource(
-                                                                            R.string.app_name
-                                                                        )
-                                                                    )
-                                                                }
-                                                            )
-                                                        }
-                                                    )
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
                         }
                     }
                 )
@@ -787,30 +906,47 @@ class HomeActivity : AppCompatActivity() {
     fun DefaultAppBar(
         onSearchClicked: () -> Unit,
     ) {
+        Column {
+            TopAppBar(
+                elevation = 4.dp,
+                backgroundColor = Color(resources.getColor(R.color.dark_blue_grey)),
 
-        TopAppBar(
-            backgroundColor = Color(resources.getColor(R.color.dark_blue_grey)),
-
-            title = {
-                Text(
-                    text = "Binwatch",
-                    color = Color.White
-                )
-            },
-            actions = {
-                IconButton(
-                    onClick = {
-                        onSearchClicked()
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = "Search Icon",
-                        tint = Color.White
+                title = {
+                    Text(
+                        text = "Binwatch",
+                        color = Color.White
                     )
+                },
+                actions = {
+                    IconButton(
+                        modifier = Modifier,
+                        onClick = {
+                            onSearchClicked()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = "Search Icon",
+                            tint = Color.White
+                        )
+                    }
+                    Spacer(Modifier.padding(5.dp))
+                    IconButton(
+                        modifier = Modifier.size(25.dp),
+                        onClick = {
+
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Search Icon",
+                            tint = Color.White
+                        )
+                    }
+                    Spacer(Modifier.padding(8.dp))
                 }
-            }
-        )
+            )
+        }
     }
 
     @Composable
@@ -924,6 +1060,8 @@ class HomeActivity : AppCompatActivity() {
             )
         }
     }
+
+    data class BottomBarItem(val tag: String, val icon: ImageVector)
 }
 
 

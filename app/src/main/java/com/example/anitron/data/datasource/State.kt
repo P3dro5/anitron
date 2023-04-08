@@ -22,3 +22,9 @@ enum class CategoryEntry {
     SearchedPeople,
     None
 }
+
+enum class BottomNavigationState{
+    Home,
+    Profile,
+    About
+}
