@@ -274,13 +274,32 @@ class HomeActivity : AppCompatActivity() {
                                                         color = Color.White,
                                                         modifier = Modifier.weight(1f)
                                                     )
-                                                    // TODO("Missing implementing view more functionality for people")
+                                                    if(content.value.productionTeam.size >= 20){
+                                                        Icon(modifier = Modifier
+                                                            .clickable {
+                                                                val intent =
+                                                                    Intent(
+                                                                        context,
+                                                                        ViewMoreActivity::class.java
+                                                                    )
+                                                                intent.putExtra(
+                                                                    "category",
+                                                                    CategoryEntry.SearchedPeople
+                                                                )
+                                                                intent.putExtra("searchedQuery", searchedQuery)
+                                                                context.startActivity(intent)
+                                                            }
+                                                            .weight(0.1f),
+                                                            imageVector = Icons.Default.ArrowForward,
+                                                            contentDescription = "Forward",
+                                                            tint = Color.White)
+                                                    }
                                                 }
                                                 Spacer(
                                                     modifier = Modifier.padding(10.dp)
                                                 )
                                                 LazyRow {
-                                                    itemsIndexed(content.value.productionTeam) { _, cast ->
+                                                    itemsIndexed(content.value.productionTeam) { index, cast ->
                                                         Card(
                                                             Modifier
                                                                 .width(110.dp)
