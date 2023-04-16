@@ -3,14 +3,17 @@ package com.example.anitron.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -19,8 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
@@ -43,10 +44,10 @@ import com.example.anitron.data.datasource.State
 import com.example.anitron.data.repository.HomeRepository
 import com.example.anitron.databinding.ActivityMainBinding
 import com.example.anitron.domain.service.RetrofitService
+import com.example.anitron.ui.component.bottomNavigation.ProfileScreen
 import com.example.anitron.ui.modelfactory.HomeViewModelFactory
 import com.example.anitron.ui.theme.fonts
 import com.example.anitron.ui.viewmodel.HomeViewModel
-import com.google.android.material.bottomappbar.BottomAppBar
 
 
 class HomeActivity : AppCompatActivity() {
@@ -147,7 +148,9 @@ class HomeActivity : AppCompatActivity() {
                         val content = viewModel.movieList.collectAsState()
 
                         when(bottomNavigationState) {
-                            BottomNavigationState.Profile -> {}
+                            BottomNavigationState.Profile -> {
+                                ProfileScreen()
+                            }
                             BottomNavigationState.About -> {}
                             BottomNavigationState.Home -> {
                                 when (content.value.state) {
