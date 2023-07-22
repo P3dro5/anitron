@@ -1,16 +1,11 @@
 package com.example.anitron.ui.component.bottomNavigation
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
@@ -21,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -95,15 +91,35 @@ fun ProfileScreen() {
                     color = Color.White,
                 )
 
-                Text(
-                    modifier = Modifier
-                        .padding(start = 15.dp, bottom = 4.dp),
-                    text = "Top Movies",
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 25.sp,
-                    color = Color.White,
-                )
+                Row(
+                    modifier = Modifier.padding(start = 15.dp, bottom = 10.dp,),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        modifier = Modifier
+                            .weight(0.7f),
+                        text = "Top Shows",
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 25.sp,
+                        color = Color.White,
+                    )
+                    TextButton(
+                        modifier = Modifier
+                            .weight(0.3f),
+                        onClick = { },
+                    ) {
+                        Text(
+                            text = "Edit shows",
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.SemiBold,
+                            textDecoration = TextDecoration.Underline,
+                            fontSize = 12.sp,
+                            color = Color.White,
+                        )
+                    }
+                }
                 LazyRow(
                     content = {
                         items(listOf("a", "b", "c", "d", "e")) {
@@ -111,15 +127,35 @@ fun ProfileScreen() {
                         }
                     })
 
-                Text(
-                    modifier = Modifier
-                        .padding(start = 15.dp, bottom = 4.dp),
-                    text = "Top Shows",
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 25.sp,
-                    color = Color.White,
-                )
+                Row(
+                    modifier = Modifier.padding(start = 15.dp, top = 10.dp, bottom = 10.dp,),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        modifier = Modifier
+                            .weight(0.7f),
+                        text = "Top Movies",
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 25.sp,
+                        color = Color.White,
+                    )
+                    TextButton(
+                        modifier = Modifier
+                            .weight(0.3f),
+                        onClick = { },
+                    ) {
+                        Text(
+                            text = "Edit movies",
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.SemiBold,
+                            textDecoration = TextDecoration.Underline,
+                            fontSize = 12.sp,
+                            color = Color.White,
+                        )
+                    }
+                }
                 LazyRow(
                     content = {
                         items(listOf("a", "b", "c", "d", "e")) {
@@ -136,7 +172,8 @@ fun MediaProfileItem(image: String = "") {
     Card(
         Modifier
             .width(110.dp)
-            .height(160.dp),
+            .height(160.dp)
+            .clickable {},
         elevation = 1.dp,
         backgroundColor = Color.Transparent,
     ) {
@@ -147,11 +184,8 @@ fun MediaProfileItem(image: String = "") {
         ) {
             if (image == "") {
 
-                IconButton(
-                    onClick = { }
-                ) {
-                    Icon(Icons.Default.Add, contentDescription = "", tint = Color.LightGray)
-                }
+                Icon(Icons.Default.Add, contentDescription = "", tint = Color.LightGray)
+
                 Text(
                     "Tap to add",
                     fontFamily = fonts,
