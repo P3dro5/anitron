@@ -8,7 +8,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,7 +51,7 @@ fun ProfileScreen() {
                         modifier = Modifier
                             .size(100.dp)
                             .padding(top = 10.dp, start = 10.dp)
-                            .background(Color.Red, CircleShape),
+                            .background(Color.Transparent, CircleShape),
                         contentAlignment = Alignment.TopCenter
                     ) {
                         AsyncImage(
@@ -70,29 +74,30 @@ fun ProfileScreen() {
                         color = Color.White,
                     )
                 }
-                Text(
-                    modifier = Modifier
-                        .padding(start = 10.dp, bottom = 4.dp),
-                    text = "Placeholder Description",
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 15.sp,
-                    color = Color.White,
-                )
+
                 Text(
                     modifier = Modifier
                         .padding(start = 10.dp, bottom = 35.dp),
                     text = "Member since DD/MM/YY",
                     fontFamily = fonts,
                     fontWeight = FontWeight.Normal,
-                    fontSize = 10.sp,
+                    fontSize = 13.sp,
                     color = Color.White,
                 )
 
+                Text(
+                    modifier = Modifier
+                        .padding(start = 10.dp, bottom = 25.dp),
+                    text = "Placeholder Description",
+                    fontFamily = fonts,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 15.sp,
+                    color = Color.White,
+                )
 
                 Text(
                     modifier = Modifier
-                        .padding(start = 30.dp, bottom = 4.dp),
+                        .padding(start = 15.dp, bottom = 4.dp),
                     text = "Top Movies",
                     fontFamily = fonts,
                     fontWeight = FontWeight.Normal,
@@ -102,22 +107,13 @@ fun ProfileScreen() {
                 LazyRow(
                     content = {
                         items(listOf("a", "b", "c", "d", "e")) {
-                            Card(
-                                Modifier
-                                    .width(110.dp)
-                                    .height(160.dp),
-                                elevation = 1.dp,
-                                backgroundColor = Color.Transparent,
-                                content = {
-
-                                }
-                            )
+                            MediaProfileItem()
                         }
                     })
 
                 Text(
                     modifier = Modifier
-                        .padding(start = 25.dp, bottom = 4.dp),
+                        .padding(start = 15.dp, bottom = 4.dp),
                     text = "Top Shows",
                     fontFamily = fonts,
                     fontWeight = FontWeight.Normal,
@@ -127,19 +123,43 @@ fun ProfileScreen() {
                 LazyRow(
                     content = {
                         items(listOf("a", "b", "c", "d", "e")) {
-                            Card(
-                                Modifier
-                                    .width(110.dp)
-                                    .height(160.dp),
-                                elevation = 1.dp,
-                                backgroundColor = Color.Transparent,
-                                content = {
-
-                                }
-                            )
+                            MediaProfileItem()
                         }
                     })
                 Spacer(Modifier.padding(40.dp))
             }
         }
     }
+
+@Composable
+fun MediaProfileItem(image: String = "") {
+    Card(
+        Modifier
+            .width(110.dp)
+            .height(160.dp),
+        elevation = 1.dp,
+        backgroundColor = Color.Transparent,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            if (image == "") {
+
+                IconButton(
+                    onClick = { }
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "", tint = Color.LightGray)
+                }
+                Text(
+                    "Tap to add",
+                    fontFamily = fonts,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 10.sp,
+                    color = Color.LightGray,
+                )
+            }
+        }
+    }
+}
