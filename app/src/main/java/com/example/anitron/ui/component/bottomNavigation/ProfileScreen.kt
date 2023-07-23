@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,21 +21,29 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.anitron.R
+import com.example.anitron.data.datasource.ProfileState
 import com.example.anitron.ui.theme.fonts
+import com.example.anitron.ui.viewmodel.HomeViewModel
 
-@Preview
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    viewModel: HomeViewModel
+) {
     val backgroundColor = Color.Transparent
+    val profileState by viewModel.profileState
     Scaffold(
         backgroundColor = backgroundColor,
         topBar = {
-            EditProfileTopBar(backgroundColor)
+            when (profileState) {
+                ProfileState.Edit -> {
+                    EditProfileTopBar(backgroundColor, viewModel)
+                }
+                else -> {}
+            }
         },
         content = { padding ->
             Column(
@@ -96,20 +105,30 @@ fun ProfileScreen() {
                             fontSize = 13.sp,
                             color = Color.White,
                         )
-                        TextButton(
-                            onClick = {},
-                            modifier = Modifier
-                                .weight(0.5f)
-                                .padding(horizontal = 10.dp)
-                                .background(shape = RoundedCornerShape(10.dp), color = colorResource(R.color.dark_blue_grey)),
-                        ){
-                            Text(
-                                text = "Edit Profile",
-                                fontFamily = fonts,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 13.sp,
-                                color = Color.White
-                            )
+                        when (profileState){
+                            ProfileState.Default -> {
+                                TextButton(
+                                onClick = {
+                                      viewModel.profileStateChange(ProfileState.Edit)
+                                },
+                                modifier = Modifier
+                                    .weight(0.5f)
+                                    .padding(horizontal = 10.dp)
+                                    .background(
+                                        shape = RoundedCornerShape(10.dp),
+                                        color = colorResource(R.color.dark_blue_grey)
+                                    ),
+                            ){
+                                Text(
+                                    text = "Edit Profile",
+                                    fontFamily = fonts,
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 13.sp,
+                                    color = Color.White
+                                )
+                            }
+                            }
+                            else -> {}
                         }
                     }
 
@@ -137,25 +156,30 @@ fun ProfileScreen() {
                         fontWeight = FontWeight.Normal,
                         fontSize = 25.sp,
                         color = Color.White,)
-                    TextButton(
-                        modifier = Modifier
-                            .weight(0.3f),
-                        onClick = { },
-                    ) {
-                        Text(
-                            text = "Edit shows",
-                            fontFamily = fonts,
-                            fontWeight = FontWeight.SemiBold,
-                            textDecoration = TextDecoration.Underline,
-                            fontSize = 12.sp,
-                            color = Color.White,
-                        )
-                    }
+                        when (profileState){
+                            ProfileState.Edit -> {
+                                TextButton(
+                                    modifier = Modifier
+                                        .weight(0.3f),
+                                    onClick = { },
+                                ) {
+                                    Text(
+                                        text = "Edit shows",
+                                        fontFamily = fonts,
+                                        fontWeight = FontWeight.SemiBold,
+                                        textDecoration = TextDecoration.Underline,
+                                        fontSize = 12.sp,
+                                        color = Color.White,
+                                    )
+                                }
+                            }
+                            else -> {}
+                        }
                     }
                     LazyRow(
                         content = {
                             items(listOf("a", "b", "c", "d", "e")) {
-                                MediaProfileItem()
+                                MediaProfileItem(profileState = profileState)
                             }
                         })
 
@@ -173,25 +197,30 @@ fun ProfileScreen() {
                         fontWeight = FontWeight.Normal,
                         fontSize = 25.sp,
                         color = Color.White,)
-                    TextButton(
-                        modifier = Modifier
-                            .weight(0.3f),
-                        onClick = { },
-                    ) {
-                        Text(
-                            text = "Edit movies",
-                            fontFamily = fonts,
-                            fontWeight = FontWeight.SemiBold,
-                            textDecoration = TextDecoration.Underline,
-                            fontSize = 12.sp,
-                            color = Color.White,
-                        )
-                    }
+                        when (profileState) {
+                            ProfileState.Edit -> {
+                                TextButton(
+                                    modifier = Modifier
+                                        .weight(0.3f),
+                                    onClick = { },
+                                ) {
+                                    Text(
+                                        text = "Edit movies",
+                                        fontFamily = fonts,
+                                        fontWeight = FontWeight.SemiBold,
+                                        textDecoration = TextDecoration.Underline,
+                                        fontSize = 12.sp,
+                                        color = Color.White,
+                                    )
+                                }
+                            }
+                            else -> {}
+                        }
                     }
                     LazyRow(
                         content = {
                             items(listOf("a", "b", "c", "d", "e")) {
-                                MediaProfileItem()
+                                MediaProfileItem(profileState = profileState)
                             }
                         })
                     Spacer(Modifier.padding(40.dp))
@@ -202,50 +231,55 @@ fun ProfileScreen() {
     }
 
 @Composable
-fun MediaProfileItem(image: String = "") {
-    Card(
-        Modifier
-            .width(110.dp)
-            .height(160.dp)
-            .clickable {},
-        elevation = 1.dp,
-        backgroundColor = Color.Transparent,
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            if (image == "") {
+fun MediaProfileItem(image: String = "", profileState: ProfileState) {
+    when (profileState) {
+        ProfileState.Edit -> {
+            Card(
+                Modifier
+                    .width(110.dp)
+                    .height(160.dp)
+                    .clickable {},
+                elevation = 1.dp,
+                backgroundColor = Color.Transparent,
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
 
-                Icon(Icons.Default.Add, contentDescription = "", tint = Color.LightGray)
-
-                Text(
-                    "Tap to add",
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 10.sp,
-                    color = Color.LightGray,
-                )
+                    if (image == "") {
+                        Icon(Icons.Default.Add, contentDescription = "", tint = Color.LightGray)
+                        Text(
+                            "Tap to add",
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 10.sp,
+                            color = Color.LightGray,
+                        )
+                    }
+                }
             }
         }
+        else -> {}
     }
 }
 
 @Composable
 fun EditProfileTopBar(
-    color: Color
+    color: Color,
+    viewModel: HomeViewModel
 ){
     Column {
         TopAppBar(
             elevation = 0.dp,
-            backgroundColor = Color.Transparent,
+            backgroundColor = color,
 
             title = {
                 IconButton(
                     modifier = Modifier,
                     onClick = {
-
+                        viewModel.profileStateChange(ProfileState.Default)
                     }
                 ) {
                     Icon(
@@ -259,7 +293,7 @@ fun EditProfileTopBar(
                 IconButton(
                     modifier = Modifier,
                     onClick = {
-
+                        viewModel.profileStateChange(ProfileState.Default)
                     }
                 ) {
                     Text(

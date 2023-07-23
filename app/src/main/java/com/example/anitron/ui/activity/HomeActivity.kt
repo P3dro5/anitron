@@ -149,7 +149,7 @@ class HomeActivity : AppCompatActivity() {
 
                         when(bottomNavigationState) {
                             BottomNavigationState.Profile -> {
-                                ProfileScreen()
+                                ProfileScreen(viewModel)
                             }
                             BottomNavigationState.About -> {}
                             BottomNavigationState.Home -> {
