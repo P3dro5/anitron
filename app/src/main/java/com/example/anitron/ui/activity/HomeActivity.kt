@@ -942,7 +942,7 @@ class HomeActivity : AppCompatActivity() {
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Settings,
-                            contentDescription = "Search Icon",
+                            contentDescription = "Settings",
                             tint = Color.White
                         )
                     }

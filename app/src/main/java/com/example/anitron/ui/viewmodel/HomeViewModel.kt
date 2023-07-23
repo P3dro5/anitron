@@ -32,6 +32,10 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
         mutableStateOf(value = BottomNavigationState.Home)
     var bottomNavigationState: NormalState<BottomNavigationState> = _bottomNavigationState
 
+    private val _profileState: MutableState<ProfileState> =
+        mutableStateOf(value = ProfileState.Default)
+    var profileState: NormalState<ProfileState> = _profileState
+
     fun updateSearchWidgetState(newValue: SearchWidgetState) {
         _searchWidgetState.value = newValue
     }
@@ -134,8 +138,14 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
     fun bottomNavigationScreenChange(screenState: BottomNavigationState){
         _bottomNavigationState.value = screenState
     }
+
+    fun profileStateChange(profileState: ProfileState){
+        _profileState.value = profileState
+    }
 }
 
 data class Result(val state: State, val movieSelection: List<Movie>, val seriesSelection: List<Movie>, val productionTeam: List<SearchedPerson>, val upcomingMoviesSelection: List<Movie>, val upcomingSeriesSelection: List<Movie>, val onTheatres: List<Movie>)
 
 data class Screen(val screenState: State)
+
+data class EditProfile(val profileState: ProfileState)

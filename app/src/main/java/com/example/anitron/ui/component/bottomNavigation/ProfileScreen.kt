@@ -6,13 +6,12 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,104 +30,135 @@ import com.example.anitron.ui.theme.fonts
 @Preview
 @Composable
 fun ProfileScreen() {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .wrapContentHeight()
-        ) {
-            Spacer(modifier = Modifier.height(130.dp))
+    val backgroundColor = Color.Transparent
+    Scaffold(
+        backgroundColor = backgroundColor,
+        topBar = {
+            EditProfileTopBar(backgroundColor)
+        },
+        content = { padding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(colorResource(R.color.blue_g)),
-                verticalArrangement = Arrangement.spacedBy(15.dp),
+                    .verticalScroll(rememberScrollState())
+                    .wrapContentHeight()
+                    .padding(padding)
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
+                Spacer(modifier = Modifier.height(130.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(colorResource(R.color.blue_g)),
+                    verticalArrangement = Arrangement.spacedBy(15.dp),
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(100.dp)
-                            .padding(top = 10.dp, start = 10.dp)
-                            .background(Color.Transparent, CircleShape),
-                        contentAlignment = Alignment.TopCenter
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        AsyncImage(
+                        Box(
                             modifier = Modifier
-                                .width(100.dp)
-                                .clip(CircleShape),
-                            model = "https://files.worldwildlife.org/wwfcmsprod/images/Sea_Turtle_Hol_Chan_Marine_Reserve_WW1105958/hero_full/p35wuxwr3_Sea_Turtle_Hol_Chan_Marine_Reserve_WW1105958.jpg",
-                            contentDescription = "turtle",
-                            contentScale = ContentScale.Crop
+                                .size(100.dp)
+                                .padding(top = 10.dp, start = 10.dp)
+                                .background(Color.Transparent, CircleShape),
+                            contentAlignment = Alignment.TopCenter
+                        ) {
+                            AsyncImage(
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .clip(CircleShape),
+                                model = "https://files.worldwildlife.org/wwfcmsprod/images/Sea_Turtle_Hol_Chan_Marine_Reserve_WW1105958/hero_full/p35wuxwr3_Sea_Turtle_Hol_Chan_Marine_Reserve_WW1105958.jpg",
+                                contentDescription = "turtle",
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                        Text(
+                            modifier = Modifier
+                                .padding(start = 60.dp, top = 15.dp)
+                                .weight(1f),
+                            text = "Placeholder Username",
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 15.sp,
+                            color = Color.White,
                         )
                     }
+
+                    Row(
+                        modifier = Modifier.padding(start = 10.dp, bottom = 35.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Text(
+                            modifier = Modifier
+                                .weight(0.7f),
+                            text = "Member since DD/MM/YY",
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 13.sp,
+                            color = Color.White,
+                        )
+                        TextButton(
+                            onClick = {},
+                            modifier = Modifier
+                                .weight(0.5f)
+                                .padding(horizontal = 10.dp)
+                                .background(shape = RoundedCornerShape(10.dp), color = colorResource(R.color.dark_blue_grey)),
+                        ){
+                            Text(
+                                text = "Edit Profile",
+                                fontFamily = fonts,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 13.sp,
+                                color = Color.White
+                            )
+                        }
+                    }
+
                     Text(
                         modifier = Modifier
-                            .padding(start = 60.dp, top = 15.dp)
-                            .weight(1f),
-                        text = "Placeholder Username",
+                            .padding(start = 10.dp, bottom = 25.dp),
+                        text = "Placeholder Description",
                         fontFamily = fonts,
                         fontWeight = FontWeight.Normal,
                         fontSize = 15.sp,
                         color = Color.White,
                     )
+
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 15.dp, bottom = 4.dp),
+                        text = "Top Movies",
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 25.sp,
+                        color = Color.White,
+                    )
+                    LazyRow(
+                        content = {
+                            items(listOf("a", "b", "c", "d", "e")) {
+                                MediaProfileItem()
+                            }
+                        })
+
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 15.dp, bottom = 4.dp),
+                        text = "Top Shows",
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 25.sp,
+                        color = Color.White,
+                    )
+                    LazyRow(
+                        content = {
+                            items(listOf("a", "b", "c", "d", "e")) {
+                                MediaProfileItem()
+                            }
+                        })
+                    Spacer(Modifier.padding(40.dp))
                 }
-
-                Text(
-                    modifier = Modifier
-                        .padding(start = 10.dp, bottom = 35.dp),
-                    text = "Member since DD/MM/YY",
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 13.sp,
-                    color = Color.White,
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(start = 10.dp, bottom = 25.dp),
-                    text = "Placeholder Description",
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 15.sp,
-                    color = Color.White,
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(start = 15.dp, bottom = 4.dp),
-                    text = "Top Movies",
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 25.sp,
-                    color = Color.White,
-                )
-                LazyRow(
-                    content = {
-                        items(listOf("a", "b", "c", "d", "e")) {
-                            MediaProfileItem()
-                        }
-                    })
-
-                Text(
-                    modifier = Modifier
-                        .padding(start = 15.dp, bottom = 4.dp),
-                    text = "Top Shows",
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 25.sp,
-                    color = Color.White,
-                )
-                LazyRow(
-                    content = {
-                        items(listOf("a", "b", "c", "d", "e")) {
-                            MediaProfileItem()
-                        }
-                    })
-                Spacer(Modifier.padding(40.dp))
             }
         }
+    )
     }
 
 @Composable
@@ -162,4 +192,49 @@ fun MediaProfileItem(image: String = "") {
             }
         }
     }
+}
+
+@Composable
+fun EditProfileTopBar(
+    color: Color
+){
+    Column {
+        TopAppBar(
+            elevation = 0.dp,
+            backgroundColor = Color.Transparent,
+
+            title = {
+                IconButton(
+                    modifier = Modifier,
+                    onClick = {
+
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close Icon",
+                        tint = Color.White
+                    )
+                }
+            },
+            actions = {
+                IconButton(
+                    modifier = Modifier,
+                    onClick = {
+
+                    }
+                ) {
+                    Text(
+                        "Save",
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 15.sp,
+                        color = Color.White,
+                    )
+                }
+                Spacer(Modifier.padding(8.dp))
+            }
+        )
+    }
+
 }

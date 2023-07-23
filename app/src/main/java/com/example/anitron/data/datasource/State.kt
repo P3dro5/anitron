@@ -28,3 +28,8 @@ enum class BottomNavigationState{
     Profile,
     About
 }
+
+enum class ProfileState{
+    Edit,
+    Default
+}
